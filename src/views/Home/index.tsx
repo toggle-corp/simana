@@ -13,6 +13,7 @@ import GameModeSelectionModal from './GameModeSelectionModal';
 import AfterGameModal from './AfterGameModal';
 import RegionMap from './RegionMap';
 import Stats from './Stats';
+import Challange from './Challange';
 
 import styles from './styles.css';
 
@@ -37,16 +38,11 @@ function Home(props: Props): React.ReactElement {
     const { className } = props;
     const [gameId, setGameId] = React.useState(new Date().getTime());
 
-    // const [gameState, setGameState] = React.useState<GameState>('user-info');
-    // const [nextGameState, setNextGameState]
-    // = React.useState<NextGameState | undefined>('mode-selection');
+    const [gameState, setGameState] = React.useState<GameState>('user-info');
+    const [nextGameState, setNextGameState] = React.useState<NextGameState | undefined>('mode-selection');
 
-    const [gameState, setGameState] = React.useState<GameState>('play');
-    const [nextGameState, setNextGameState] = React.useState<NextGameState | undefined>(undefined);
-
-    const [name, setName] = React.useState('');
-    // const [mode, setMode] = React.useState<GameMode | undefined>(undefined);
-    const [mode, setMode] = React.useState<GameMode | undefined>('province');
+    const [name, setName] = React.useState('fhx');
+    const [mode, setMode] = React.useState<GameMode | undefined>(undefined);
 
     const handleGameplayEnd = React.useCallback(() => {
         setGameState('finished');
@@ -56,7 +52,9 @@ function Home(props: Props): React.ReactElement {
     const {
         round,
         elapsed,
-    } = useGameplay(gameId, gameState, handleGameplayEnd);
+        addAttempt,
+        challanges,
+    } = useGameplay(gameId, gameState, mode, handleGameplayEnd);
 
     const handleUserInfoStartClick = React.useCallback((userName) => {
         setName(userName);
@@ -84,7 +82,8 @@ function Home(props: Props): React.ReactElement {
 
     const handleRegionClick = React.useCallback((properties) => {
         console.warn('You clicked on', properties.title);
-    }, []);
+        addAttempt(properties.code);
+    }, [addAttempt]);
 
     return (
         <div className={_cs(className, styles.home)}>
@@ -109,8 +108,12 @@ function Home(props: Props): React.ReactElement {
             <Stats
                 className={styles.stats}
                 mode={mode}
-                userName={name}
+                username={name}
                 elapsed={elapsed}
+                round={round}
+            />
+            <Challange
+                challange={challanges[round]}
             />
             { gameState === 'user-info' && (
                 <UserInformationModal
@@ -125,6 +128,7 @@ function Home(props: Props): React.ReactElement {
             { gameState === 'finished' && (
                 <AfterGameModal
                     score={round}
+                    challanges={challanges}
                     onPlayAgainClick={handlePlayAgainButtonClick}
                 />
             )}

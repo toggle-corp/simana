@@ -10,9 +10,19 @@ interface Props {
 
 function AfterGameModal(props: Props): React.ReactElement {
     const {
-        score,
         onPlayAgainClick,
+        challanges,
     } = props;
+
+    const score = React.useMemo(() => (
+        challanges.reduce((acc, val) => {
+            if (val.result === 'pass') {
+                return acc + 1;
+            }
+
+            return acc;
+        }, 0)
+    ), [challanges]);
 
     return (
         <Haze>

@@ -14,11 +14,14 @@ function ElapsedOutput(p) {
     const minutes = Math.floor(totalSeconds / 60);
 
     return (
-        <div>
-            <div>
+        <div className={styles.elapsedOutput}>
+            <div className={styles.min}>
                 {minutes}
             </div>
-            <div>
+            <div className={styles.separator}>
+                :
+            </div>
+            <div className={styles.sec}>
                 {seconds}
             </div>
         </div>
@@ -31,6 +34,7 @@ function Stats(props: Props) {
         mode,
         username,
         className,
+        round,
     } = props;
 
     return (
@@ -40,6 +44,9 @@ function Stats(props: Props) {
             </div>
             <div className={styles.mode}>
                 { mode }
+            </div>
+            <div className={styles.round}>
+                { round }
             </div>
             <ElapsedOutput
                 value={elapsed}
