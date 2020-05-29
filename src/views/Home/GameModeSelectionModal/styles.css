@@ -1,0 +1,62 @@
+.game-mode-selection-modal {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--color-foreground);
+    padding: calc(var(--spacing-large) - var(--spacing-medium));
+    width: 60vw;
+    height: 60vh;
+    overflow: auto;
+
+    >.header {
+        flex-shrink: 0;
+        text-align: center;
+
+        .heading {
+            padding: var(--spacing-medium);
+        }
+    }
+
+    .content {
+        display: flex;
+        align-items: center;
+        flex-grow: 1;
+        justify-content: space-around;
+        overflow: auto;
+
+        .game-mode-card {
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            padding: calc(var(--spacing-medium) - var(--spacing-small));
+
+            .header {
+                flex-shrink: 0;
+
+                .heading {
+                    padding: var(--spacing-small);
+                    color: rgba(0, 100, 0, .5);
+                }
+            }
+
+            .content {
+                flex-grow: 1;
+                padding: var(--spacing-small);
+
+                .icon {
+                    color: rgba(0, 0, 0, .3);
+                    font-size: 64px;
+
+                    path {
+                        stroke: currentColor;
+                        stroke-width: 1px;
+                    }
+                }
+            }
+
+            .actions {
+                flex-shrink: 0;
+                padding: var(--spacing-small);
+            }
+        }
+    }
+}

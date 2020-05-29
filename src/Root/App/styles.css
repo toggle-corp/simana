@@ -3,7 +3,10 @@
     --spacing-medium: 10px;
     --spacing-large: 16px;
 
+    --color-foreground: #fff;
+
     --color-accent: #18bc9c;
+    --color-text-on-accent: #fff;
 
     --font-size-medium: 16px;
     --font-size-large: 20px;
@@ -11,4 +14,9 @@
     --font-weight-light: 300;
     --font-weight-medium: 400;
     --font-weight-bold: 700;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+    font-weight: var(--font-weight-bold);
 }

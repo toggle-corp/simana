@@ -1,10 +1,15 @@
 import React from 'react';
 import { _cs } from '@togglecorp/fujs';
 
-import Map from '#remap';
-import MapContainer from '#remap/MapContainer';
+import Map from '#re-map';
+import MapContainer from '#re-map/MapContainer';
+import MapSource from '#re-map/MapSource';
+import MapLayer from '#re-map/MapSource/MapLayer';
 
 import { BBox } from '#types';
+
+import UserInformationModal from './UserInformationModal';
+import GameModeSelectionModal from './GameModeSelectionModal';
 
 import styles from './styles.css';
 
@@ -15,7 +20,7 @@ interface Props {
 const lightStyle = 'mapbox://styles/mapbox/light-v10';
 const mapSources = {
     nepal: {
-        url: 'mapbox://neocmoha.9sgqk05q',
+        url: 'mapbox://togglecorp.2pw3lud3',
         layers: {
             province: 'provincegeo',
             district: 'districtgeo',
@@ -24,7 +29,7 @@ const mapSources = {
         },
     },
     nepalCentroid: {
-        url: 'mapbox://neocmoha.21in8y6a',
+        url: 'mapbox://togglecorp.1j8vj54j',
         layers: {
             province: 'provincecentroidgeo',
             district: 'districtcentroidgeo',
@@ -40,8 +45,35 @@ const defaultBounds: BBox = [
     30.44702867091792,
 ];
 
-const Home = (props: Props) => {
+
+type GameState = 'user-info' | 'mode-selection' | 'play';
+type NextGameState = Omit<GameState, 'user-info'>;
+type GameMode = 'province' | 'district';
+
+function Home(props: Props): React.ReactElement {
     const { className } = props;
+    const [gameState, setGameState] = React.useState<GameState>('user-info');
+    const [nextGameState, setNextGameState] = React.useState<NextGameState | undefined>('mode-selection');
+    const [name, setName] = React.useState('');
+    const [mode, setMode] = React.useState<GameMode | undefined>(undefined);
+
+    const handleUserInfoStartClick = React.useCallback((userName) => {
+        setName(userName);
+
+        if (nextGameState) {
+            setGameState(nextGameState);
+            setNextGameState('play');
+        }
+    }, [nextGameState, setNextGameState]);
+
+    const handleGameModeSelect = React.useCallback((gameMode) => {
+        setMode(gameMode);
+
+        if (nextGameState) {
+            setGameState(nextGameState);
+            setNextGameState(undefined);
+        }
+    }, [setMode, nextGameState]);
 
     return (
         <div className={_cs(className, styles.home)}>
@@ -58,9 +90,68 @@ const Home = (props: Props) => {
                 navControlPosition="top-right"
             >
                 <MapContainer className={styles.mapContainer} />
+                <MapSource
+                    sourceKey="country"
+                    sourceOptions={{
+                        type: 'vector',
+                        url: mapSources.nepal.url,
+                    }}
+                >
+                    { mode === 'province' && (
+                        <>
+                            <MapLayer
+                                layerKey="province-fill"
+                                // onClick={}
+                                layerOptions={{
+                                    'source-layer': mapSources.nepal.layers.province,
+                                    type: 'fill',
+                                }}
+                            />
+                            <MapLayer
+                                layerKey="province-outline"
+                                layerOptions={{
+                                    'source-layer': mapSources.nepal.layers.province,
+                                    type: 'line',
+                                }}
+                            />
+                        </>
+                    )}
+                    { mode === 'district' && (
+                        <>
+                            <MapLayer
+                                layerKey="district-fill"
+                                // onClick={}
+                                layerOptions={{
+                                    'source-layer': mapSources.nepal.layers.district,
+                                    type: 'fill',
+                                    paint: {
+                                        'fill-opacity': 0.5,
+                                    },
+                                }}
+                            />
+                            <MapLayer
+                                layerKey="district-outline"
+                                layerOptions={{
+                                    'source-layer': mapSources.nepal.layers.district,
+                                    type: 'line',
+                                }}
+                            />
+                        </>
+                    )}
+                </MapSource>
             </Map>
+            { gameState === 'user-info' && (
+                <UserInformationModal
+                    onStartClick={handleUserInfoStartClick}
+                />
+            )}
+            { gameState === 'mode-selection' && (
+                <GameModeSelectionModal
+                    onModeSelect={handleGameModeSelect}
+                />
+            )}
         </div>
     );
-};
+}
 
 export default Home;
