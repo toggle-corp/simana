@@ -1,9 +1,10 @@
 .home {
+    display: flex;
+    flex-direction: column;
     background-color: var(--color-background-alt);
-    height: var(--height-content);
+    overflow: auto;
 
-    .message {
-        display: flex;
-        flex-direction: column;
+    .map-container {
+        flex-grow: 1;
     }
 }
