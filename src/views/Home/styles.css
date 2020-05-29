@@ -7,4 +7,14 @@
     .map-container {
         flex-grow: 1;
     }
+
+    .stats {
+        position: absolute;
+        top: 0;
+        right: 0;
+        z-index: 1;
+        background-color: #fff;
+        padding: 10px;
+        font-size: 30px;
+    }
 }

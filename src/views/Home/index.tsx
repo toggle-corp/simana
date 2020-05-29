@@ -3,13 +3,16 @@ import { _cs } from '@togglecorp/fujs';
 
 import Map from '#re-map';
 import MapContainer from '#re-map/MapContainer';
-import MapSource from '#re-map/MapSource';
-import MapLayer from '#re-map/MapSource/MapLayer';
+import MapBounds from '#re-map/MapBounds';
 
 import { BBox } from '#types';
+import { useGameplay } from '#hooks';
 
 import UserInformationModal from './UserInformationModal';
 import GameModeSelectionModal from './GameModeSelectionModal';
+import AfterGameModal from './AfterGameModal';
+import RegionMap from './RegionMap';
+import Stats from './Stats';
 
 import styles from './styles.css';
 
@@ -18,26 +21,6 @@ interface Props {
 }
 
 const lightStyle = 'mapbox://styles/mapbox/light-v10';
-const mapSources = {
-    nepal: {
-        url: 'mapbox://togglecorp.2pw3lud3',
-        layers: {
-            province: 'provincegeo',
-            district: 'districtgeo',
-            municipality: 'municipalitygeo',
-            ward: 'wardgeo',
-        },
-    },
-    nepalCentroid: {
-        url: 'mapbox://togglecorp.1j8vj54j',
-        layers: {
-            province: 'provincecentroidgeo',
-            district: 'districtcentroidgeo',
-            municipality: 'municipalitycentroidgeo',
-            ward: 'wardcentroidgeo',
-        },
-    },
-};
 const defaultBounds: BBox = [
     80.05858661752784,
     26.347836996368667,
@@ -46,16 +29,34 @@ const defaultBounds: BBox = [
 ];
 
 
-type GameState = 'user-info' | 'mode-selection' | 'play';
-type NextGameState = Omit<GameState, 'user-info'>;
+type GameState = 'user-info' | 'mode-selection' | 'play' | 'finished';
+type NextGameState = Exclude<GameState, 'user-info' | 'finished'>;
 type GameMode = 'province' | 'district';
 
 function Home(props: Props): React.ReactElement {
     const { className } = props;
-    const [gameState, setGameState] = React.useState<GameState>('user-info');
-    const [nextGameState, setNextGameState] = React.useState<NextGameState | undefined>('mode-selection');
+    const [gameId, setGameId] = React.useState(new Date().getTime());
+
+    // const [gameState, setGameState] = React.useState<GameState>('user-info');
+    // const [nextGameState, setNextGameState]
+    // = React.useState<NextGameState | undefined>('mode-selection');
+
+    const [gameState, setGameState] = React.useState<GameState>('play');
+    const [nextGameState, setNextGameState] = React.useState<NextGameState | undefined>(undefined);
+
     const [name, setName] = React.useState('');
-    const [mode, setMode] = React.useState<GameMode | undefined>(undefined);
+    // const [mode, setMode] = React.useState<GameMode | undefined>(undefined);
+    const [mode, setMode] = React.useState<GameMode | undefined>('province');
+
+    const handleGameplayEnd = React.useCallback(() => {
+        setGameState('finished');
+        console.warn('game finished');
+    }, [setGameState]);
+
+    const {
+        round,
+        elapsed,
+    } = useGameplay(gameId, gameState, handleGameplayEnd);
 
     const handleUserInfoStartClick = React.useCallback((userName) => {
         setName(userName);
@@ -75,6 +76,16 @@ function Home(props: Props): React.ReactElement {
         }
     }, [setMode, nextGameState]);
 
+    const handlePlayAgainButtonClick = React.useCallback(() => {
+        setGameState('mode-selection');
+        setNextGameState('play');
+        setGameId(new Date().getTime());
+    }, [setGameState, setNextGameState, setGameId]);
+
+    const handleRegionClick = React.useCallback((properties) => {
+        console.warn('You clicked on', properties.title);
+    }, []);
+
     return (
         <div className={_cs(className, styles.home)}>
             <Map
@@ -84,62 +95,23 @@ function Home(props: Props): React.ReactElement {
                     minZoom: 5,
                     bounds: defaultBounds,
                 }}
-                scaleControlShown
-                navControlShown
-                scaleControlPosition="bottom-right"
-                navControlPosition="top-right"
             >
+                <MapBounds
+                    bounds={defaultBounds}
+                    padding={120}
+                />
                 <MapContainer className={styles.mapContainer} />
-                <MapSource
-                    sourceKey="country"
-                    sourceOptions={{
-                        type: 'vector',
-                        url: mapSources.nepal.url,
-                    }}
-                >
-                    { mode === 'province' && (
-                        <>
-                            <MapLayer
-                                layerKey="province-fill"
-                                // onClick={}
-                                layerOptions={{
-                                    'source-layer': mapSources.nepal.layers.province,
-                                    type: 'fill',
-                                }}
-                            />
-                            <MapLayer
-                                layerKey="province-outline"
-                                layerOptions={{
-                                    'source-layer': mapSources.nepal.layers.province,
-                                    type: 'line',
-                                }}
-                            />
-                        </>
-                    )}
-                    { mode === 'district' && (
-                        <>
-                            <MapLayer
-                                layerKey="district-fill"
-                                // onClick={}
-                                layerOptions={{
-                                    'source-layer': mapSources.nepal.layers.district,
-                                    type: 'fill',
-                                    paint: {
-                                        'fill-opacity': 0.5,
-                                    },
-                                }}
-                            />
-                            <MapLayer
-                                layerKey="district-outline"
-                                layerOptions={{
-                                    'source-layer': mapSources.nepal.layers.district,
-                                    type: 'line',
-                                }}
-                            />
-                        </>
-                    )}
-                </MapSource>
+                <RegionMap
+                    mode={mode}
+                    onRegionClick={handleRegionClick}
+                />
             </Map>
+            <Stats
+                className={styles.stats}
+                mode={mode}
+                userName={name}
+                elapsed={elapsed}
+            />
             { gameState === 'user-info' && (
                 <UserInformationModal
                     onStartClick={handleUserInfoStartClick}
@@ -148,6 +120,12 @@ function Home(props: Props): React.ReactElement {
             { gameState === 'mode-selection' && (
                 <GameModeSelectionModal
                     onModeSelect={handleGameModeSelect}
+                />
+            )}
+            { gameState === 'finished' && (
+                <AfterGameModal
+                    score={round}
+                    onPlayAgainClick={handlePlayAgainButtonClick}
                 />
             )}
         </div>
