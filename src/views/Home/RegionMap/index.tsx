@@ -3,11 +3,14 @@ import MapSource from '#re-map/MapSource';
 import MapLayer from '#re-map/MapSource/MapLayer';
 
 import { GameMode } from '#types';
+import mapTheme from './mapTheme';
 
 interface Props {
     mode: GameMode;
     onRegionClick: (p: { code: string }) => void;
 }
+
+const noOp = () => { console.warn('entering/leaving'); };
 
 const mapSources = {
     nepal: {
@@ -69,17 +72,17 @@ function RegionMap(props: Props) {
                             layerOptions={{
                                 'source-layer': mapSources.nepal.layers.province,
                                 type: 'fill',
-                                paint: {
-                                    'fill-color': '#008088',
-                                    'fill-opacity': 0.1,
-                                },
+                                paint: mapTheme.province.fillPaint,
                             }}
+                            onMouseEnter={noOp}
+                            onMouseLeave={noOp}
                         />
                         <MapLayer
                             layerKey="province-outline"
                             layerOptions={{
                                 'source-layer': mapSources.nepal.layers.province,
                                 type: 'line',
+                                paint: mapTheme.province.outlinePaint,
                             }}
                         />
                     </>
@@ -92,17 +95,17 @@ function RegionMap(props: Props) {
                             layerOptions={{
                                 'source-layer': mapSources.nepal.layers.district,
                                 type: 'fill',
-                                paint: {
-                                    'fill-color': '#008088',
-                                    'fill-opacity': 0.1,
-                                },
+                                paint: mapTheme.province.fillPaint,
                             }}
+                            onMouseEnter={noOp}
+                            onMouseLeave={noOp}
                         />
                         <MapLayer
                             layerKey="district-outline"
                             layerOptions={{
                                 'source-layer': mapSources.nepal.layers.district,
                                 type: 'line',
+                                paint: mapTheme.province.outlinePaint,
                             }}
                         />
                     </>

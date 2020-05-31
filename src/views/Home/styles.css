@@ -1,7 +1,8 @@
 .home {
     display: flex;
     flex-direction: column;
-    background-color: var(--color-background-alt);
+    position: relative;
+    background-color: var(--color-background);
     overflow: auto;
 
     .map-container {
