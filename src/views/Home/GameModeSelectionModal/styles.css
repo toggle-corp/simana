@@ -1,10 +1,12 @@
 .game-mode-selection-modal {
     display: flex;
     flex-direction: column;
+    border-radius: var(--radius-border-medium);
+    box-shadow: 0 3px 10px -3px rgba(0, 0, 0, .3);
     background-color: var(--color-foreground);
-    padding: calc(var(--spacing-large) - var(--spacing-medium));
-    width: 60vw;
-    height: 60vh;
+    padding: var(--spacing-large);
+    width: 500px;
+    height: 400px;
     overflow: auto;
 
     >.header {

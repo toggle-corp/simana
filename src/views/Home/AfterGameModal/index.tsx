@@ -1,11 +1,15 @@
 import React from 'react';
-import { _cs } from '@togglecorp/fujs';
 
 import Haze from '#components/Haze';
 import Button from '#components/Button';
+
+import { Challange } from '#types';
+
 import styles from './styles.css';
 
 interface Props {
+    onPlayAgainClick: () => void;
+    challanges: Challange[];
 }
 
 function AfterGameModal(props: Props): React.ReactElement {
@@ -17,7 +21,7 @@ function AfterGameModal(props: Props): React.ReactElement {
     const score = React.useMemo(() => (
         challanges.reduce((acc, val) => {
             if (val.result === 'pass') {
-                return acc + 1;
+                return acc + 500;
             }
 
             return acc;
@@ -27,12 +31,24 @@ function AfterGameModal(props: Props): React.ReactElement {
     return (
         <Haze>
             <div className={styles.afterGamePlayModal}>
-                <div className={styles.score}>
-                    { score }
+                <header className={styles.header}>
+                    <h2 className={styles.heading}>
+                        Game over
+                    </h2>
+                </header>
+                <div className={styles.content}>
+                    <div className={styles.scoreLabel}>
+                        Your score
+                    </div>
+                    <div className={styles.score}>
+                        { score }
+                    </div>
+                    <div className={styles.actions}>
+                        <Button onClick={onPlayAgainClick}>
+                            Play again
+                        </Button>
+                    </div>
                 </div>
-                <Button onClick={onPlayAgainClick}>
-                    Play again
-                </Button>
             </div>
         </Haze>
     );

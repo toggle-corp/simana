@@ -1,3 +1,10 @@
+export const appName = 'Nepal Geo Explorer';
+
+export const gameModes = {
+    province: 'Province mode',
+    district: 'District mode',
+};
+
 export const provinces = [
     {
         id: 4,

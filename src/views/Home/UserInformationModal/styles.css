@@ -1,4 +1,43 @@
 .user-information-modal {
-    padding: 12px;
-    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    border-radius: var(--radius-border-medium);
+    box-shadow: 0 3px 10px -3px rgba(0, 0, 0, .3);
+    background-color: var(--color-foreground);
+    padding: var(--spacing-large);
+    width: 500px;
+    height: 400px;
+
+    .header {
+        flex-shrink: 0;
+        padding: var(--spacing-medium);
+
+        .heading {
+            text-align: center;
+        }
+    }
+
+    .content {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        flex-grow: 1;
+        justify-content: center;
+
+        .avatar {
+            padding: var(--spacing-medium);
+
+            .icon {
+                font-size: 56px;
+            }
+        }
+
+        .inputs {
+            padding: var(--spacing-medium);
+        }
+
+        .actions {
+            padding: var(--spacing-medium);
+        }
+    }
 }

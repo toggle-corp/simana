@@ -2,7 +2,11 @@ import React from 'react';
 import MapSource from '#re-map/MapSource';
 import MapLayer from '#re-map/MapSource/MapLayer';
 
+import { GameMode } from '#types';
+
 interface Props {
+    mode: GameMode;
+    onRegionClick: (p: { code: string }) => void;
 }
 
 const mapSources = {
@@ -66,7 +70,8 @@ function RegionMap(props: Props) {
                                 'source-layer': mapSources.nepal.layers.province,
                                 type: 'fill',
                                 paint: {
-                                    'fill-opacity': 0.5,
+                                    'fill-color': '#008088',
+                                    'fill-opacity': 0.1,
                                 },
                             }}
                         />
@@ -88,7 +93,8 @@ function RegionMap(props: Props) {
                                 'source-layer': mapSources.nepal.layers.district,
                                 type: 'fill',
                                 paint: {
-                                    'fill-opacity': 0.5,
+                                    'fill-color': '#008088',
+                                    'fill-opacity': 0.1,
                                 },
                             }}
                         />

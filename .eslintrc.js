@@ -96,8 +96,8 @@ module.exports = {
         'jsx-a11y/label-has-for': 'warn',
 
         '@typescript-eslint/no-empty-interface': 'warn',
-        '@typescript-eslint/explicit-function-return-type': 'warn',
-        '@typescript-eslint/explicit-module-boundary-types': 'warn',
+        '@typescript-eslint/explicit-function-return-type': 'off',
+        '@typescript-eslint/explicit-module-boundary-types': 'off',
 
         'react/no-unused-state': 'warn',
         'react/default-props-match-prop-types': ['warn', {

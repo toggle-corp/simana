@@ -2,11 +2,11 @@ import React from 'react';
 import { _cs } from '@togglecorp/fujs';
 
 import InputContainer from '#components/InputContainer';
-import Input from '#components/Input';
+import Input, { InputProps } from '#components/Input';
 
 import styles from './styles.css';
 
-interface Props extends React.HTMLProps<HTMLInputElement> {
+interface Props extends InputProps {
     className?: string;
 }
 
@@ -19,8 +19,10 @@ function TextInput(props: Props): React.ReactElement {
 
     return (
         <InputContainer
+            className={className}
             label={label}
-            input={<Input />}
+            // eslint-disable-next-line react/jsx-props-no-spreading
+            input={<Input {...otherProps} />}
         />
     );
 }

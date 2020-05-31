@@ -4,6 +4,11 @@ import { _cs } from '@togglecorp/fujs';
 import styles from './styles.css';
 
 interface Props {
+    className?: string;
+    labelClassName?: string;
+    label?: React.ReactNode;
+    inputSectionClassName?: string;
+    input: React.ReactNode;
 }
 
 function InputContainer(props: Props) {

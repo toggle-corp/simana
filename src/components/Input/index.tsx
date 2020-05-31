@@ -3,15 +3,15 @@ import { _cs } from '@togglecorp/fujs';
 
 import styles from './styles.css';
 
-type InputProps = Omit<React.HTMLProps<HTMLInputElement>, 'onChange' | 'value'>;
-interface Props extends InputProps {
+type HTMLInputProps = Omit<React.HTMLProps<HTMLInputElement>, 'onChange' | 'value'>;
+export interface InputProps extends HTMLInputProps {
     className?: string;
     value: string;
     onChange: (value: string, name?: string | undefined) => void;
     name?: string;
 }
 
-function Input(props: Props): React.ReactElement {
+function Input(props: InputProps): React.ReactElement {
     const {
         className,
         onChange,

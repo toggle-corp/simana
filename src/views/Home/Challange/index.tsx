@@ -1,15 +1,26 @@
 import React from 'react';
+import { _cs } from '@togglecorp/fujs';
+
+import { Challange } from '#types';
 
 import styles from './styles.css';
 
-function Challange(p) {
-    const { challange } = p;
+interface Props {
+    className?: string;
+    challange: Challange;
+}
+
+function ChallangeView(p: Props) {
+    const {
+        challange,
+        className,
+    } = p;
 
     return (
-        <div className={styles.challange}>
+        <div className={_cs(className, styles.challange)}>
             { challange?.title }
         </div>
     );
 }
 
-export default Challange;
+export default React.memo(ChallangeView);

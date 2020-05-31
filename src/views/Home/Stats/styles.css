@@ -1,3 +1,21 @@
 .elapsed-output {
     display: flex;
 }
+
+.text-output {
+    display: flex;
+    padding: calc(var(--spacing-medium) - var(--spacing-small));
+
+    .label {
+        padding: var(--spacing-small);
+    }
+
+    .value {
+        padding: var(--spacing-small);
+    }
+}
+
+.stats {
+    background-color: var(--color-foreground);
+    padding: var(--spacing-large);
+}

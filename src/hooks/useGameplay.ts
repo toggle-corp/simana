@@ -4,15 +4,24 @@ import {
     provinces,
 } from '#utils/constants';
 
-const DEFAULT_TICK_INTERVAL = 200;
+import {
+    Challange,
+    GameMode,
+    GameState,
+    Region,
+} from '#types';
 
-const regionMap = {
+const DEFAULT_TICK_INTERVAL = 500;
+
+const regionMap: {
+    [key in GameMode]: Region[];
+} = {
     district: districts,
     province: provinces,
 };
 
-const getRandomRegions = (level, amount) => {
-    const regions = regionMap[level];
+const getRandomRegions = (mode: GameMode, amount: number) => {
+    const regions = regionMap[mode];
     const randomRegions = [...Array(amount).keys()].map(() => {
         const randomIndex = Math.floor(Math.random() * Math.floor(regions.length));
         const region = regions[randomIndex];
@@ -26,19 +35,22 @@ const getRandomRegions = (level, amount) => {
     return randomRegions;
 };
 
-export function useTimer(use: boolean, tickInterval:number = DEFAULT_TICK_INTERVAL) {
+export function useTimer(
+    use: boolean,
+    tickInterval:number = DEFAULT_TICK_INTERVAL,
+) {
     const [tick, setTick] = React.useState(0);
     const initialTimeRef = React.useRef(new Date().getTime());
     const [initialTime, setInitialTime] = React.useState(initialTimeRef.current);
-    const [lapTime, setLapTime] = React.useState(initialTimeRef.current);
+    const [initialLapTime, setInitialLapTime] = React.useState(initialTimeRef.current);
     const [elapsed, setElapsed] = React.useState(0);
     const [lapElapsed, setLapElapsed] = React.useState(0);
     const shouldTick = React.useRef(use);
 
     const addLap = React.useCallback(() => {
-        setLapTime(new Date().getTime());
+        setInitialLapTime(new Date().getTime());
         setLapElapsed(0);
-    }, [setLapTime, setLapElapsed]);
+    }, [setInitialLapTime, setLapElapsed]);
 
     React.useEffect(() => {
         shouldTick.current = use;
@@ -53,21 +65,19 @@ export function useTimer(use: boolean, tickInterval:number = DEFAULT_TICK_INTERV
         if (current) {
             const now = new Date().getTime();
             const currentElapsed = now - initialTime;
-            const currentLapElapsed = now - lapTime;
+            const currentLapElapsed = now - initialLapTime;
             setTick((prevTick) => prevTick + 1);
             setElapsed(currentElapsed);
             setLapElapsed(currentLapElapsed);
         }
-    }, [initialTime, lapTime, setTick, setElapsed, setLapElapsed, shouldTick]);
+    }, [initialTime, initialLapTime, setTick, setElapsed, setLapElapsed, shouldTick]);
 
     const cleanUp = React.useCallback((interval) => {
         window.clearInterval(interval);
-        setTick(0);
-        setElapsed(0);
-    }, [setTick, setElapsed]);
+    }, []);
 
     React.useEffect(() => {
-        let interval;
+        let interval:number | undefined;
 
         if (use) {
             interval = window.setInterval(handleTick, tickInterval);
@@ -86,20 +96,13 @@ export function useTimer(use: boolean, tickInterval:number = DEFAULT_TICK_INTERV
     };
 }
 
-const ROUND_DURATION = 5000;
+const ROUND_DURATION = 10000;
 const MAX_ROUNDS = 10;
 
-interface Challange {
-    title: string;
-    answer: string;
-    result: 'pass' | 'fail' | undefined;
-    attempts: string[];
-}
-
 export function useGameplay(
-    gameId: string,
-    gameState: string,
-    gameMode: string,
+    gameId: string | number,
+    gameState: GameState,
+    gameMode: GameMode,
     onGameplayEnd: () => void,
 ) {
     const {
@@ -111,8 +114,9 @@ export function useGameplay(
     const [round, setRound] = React.useState(0);
     const [challanges, setChallanges] = React.useState<Challange[]>([]);
 
+
     React.useEffect(() => {
-        if (gameMode && gameState === 'play') {
+        if (gameMode && gameState === 'initialize') {
             const randomRegions = getRandomRegions(gameMode, MAX_ROUNDS);
             const newChallanges = randomRegions.map((region) => ({
                 title: `Find ${region.title}`,
@@ -120,11 +124,15 @@ export function useGameplay(
                 result: undefined,
                 attempts: [],
             }));
-
             setChallanges(newChallanges);
-            setRound(0);
         }
-    }, [gameState, setChallanges, gameId, gameMode, setRound]);
+
+        if (gameMode && gameState === 'play') {
+            setRound(0);
+            addLap();
+            console.info('setting round......');
+        }
+    }, [gameState, setChallanges, gameId, gameMode, setRound, addLap]);
 
     const addAttempt = React.useCallback((answer) => {
         const currentChallange = challanges[round];
@@ -133,10 +141,10 @@ export function useGameplay(
 
         if (currentChallange?.answer === answer) {
             updatedChallange.result = 'pass';
-            console.warn('correct answer');
+            // console.warn('correct answer');
         } else {
             updatedChallange.result = 'fail';
-            console.warn('An attempt was made', answer);
+            // console.warn('An attempt was made', answer);
         }
 
         const newChallanges = [...challanges];
@@ -146,6 +154,7 @@ export function useGameplay(
 
     if (gameState === 'play') {
         let currentRound = round;
+        console.info('current round', round);
         const currentChallange = challanges[round];
 
         if (currentChallange?.result) {
@@ -159,6 +168,7 @@ export function useGameplay(
         }
 
         if (currentRound >= MAX_ROUNDS) {
+            setRound(0);
             onGameplayEnd();
         } else if (currentRound !== round) {
             setRound(currentRound);

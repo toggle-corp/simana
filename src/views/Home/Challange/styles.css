@@ -1,4 +1,5 @@
 .challange {
-    font-size: 30px;
-    z-index: 3;
+    text-shadow: 0 0 3px var(--color-foreground);
+    font-size: var(--font-size-ultra-large);
+    font-weight: var(--font-weight-bold);
 }

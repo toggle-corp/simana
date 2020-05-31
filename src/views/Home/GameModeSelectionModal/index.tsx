@@ -1,20 +1,16 @@
 import React from 'react';
-import { _cs } from '@togglecorp/fujs';
 import { GrMapLocation } from 'react-icons/gr';
 
 import Haze from '#components/Haze';
 import Button from '#components/Button';
+
+import { gameModes } from '#utils/constants';
 
 import styles from './styles.css';
 
 interface Props {
     onModeSelect: (mode: string) => void;
 }
-
-const gameModes = {
-    province: 'Province mode',
-    district: 'District mode',
-};
 
 function GameModeSelectionModal(props: Props): React.ReactElement {
     const {
