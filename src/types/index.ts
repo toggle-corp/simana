@@ -15,3 +15,8 @@ export interface Region {
     code: string;
     title: string;
 }
+
+export interface Message {
+    text: string;
+    timestamp: number;
+}

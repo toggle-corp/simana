@@ -27,6 +27,7 @@ const routeSettings: SomeRoute[] = [
         name: 'home',
         title: 'Home',
         load: lazy(() => import('../../../views/Home')),
+        hideNavbar: true,
     },
     {
         path: '/403/',

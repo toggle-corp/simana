@@ -5,6 +5,11 @@ export const gameModes = {
     district: 'District mode',
 };
 
+export const ROUND_DURATION = 15000;
+export const MAX_ROUNDS = 10;
+export const MAX_ATTEMPTS = 3;
+
+
 export const provinces = [
     {
         id: 4,

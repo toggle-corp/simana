@@ -24,8 +24,8 @@ const provinceOutlinePaint: mapboxgl.LinePaint = {
     'line-opacity': [
         'case',
         ['==', ['feature-state', 'hovered'], true],
-        0.8,
-        0.2,
+        0.9,
+        0.7,
     ],
 };
 
@@ -35,8 +35,8 @@ const districtOutlinePaint: mapboxgl.LinePaint = {
     'line-opacity': [
         'case',
         ['==', ['feature-state', 'hovered'], true],
-        0.8,
-        0.2,
+        0.9,
+        0.7,
     ],
 };
 

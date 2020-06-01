@@ -4,6 +4,7 @@
 
 .text-output {
     display: flex;
+    align-items: center;
     padding: calc(var(--spacing-medium) - var(--spacing-small));
 
     .label {
@@ -12,10 +13,35 @@
 
     .value {
         padding: var(--spacing-small);
+        font-weight: var(--font-weight-bold);
     }
 }
 
 .stats {
-    background-color: var(--color-foreground);
+    display: flex;
+    justify-content: space-between;
     padding: var(--spacing-large);
+
+    .username {
+        flex-shrink: 0;
+    }
+
+    .game-mode {
+        flex-shrink: 0;
+
+        .label {
+            font-size: var(--font-size-small);
+        }
+    }
+
+    .time-remaining {
+        display: flex;
+        align-items: center;
+        flex-grow: 1;
+        justify-content: center;
+
+        .label {
+            font-size: var(--font-size-small);
+        }
+    }
 }

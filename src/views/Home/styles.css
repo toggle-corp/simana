@@ -12,7 +12,7 @@
     .initialize-message {
         display: flex;
         position: absolute;
-        top: 10%;
+        top: 20%;
         left: 0;
         align-items: center;
         justify-content: center;
@@ -42,7 +42,7 @@
 
     .challenge {
         position: absolute;
-        bottom: 10%;
+        bottom: 15%;
         left: 50%;
         transform: translateX(-50%);
         z-index: 1;
@@ -52,6 +52,24 @@
         position: absolute;
         top: 0;
         right: 0;
+        z-index: 1;
+        width: 100%;
+    }
+
+    .message {
+        position: absolute;
+        top: 20%;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1;
+        pointer-events: none;
+    }
+
+    .score-board {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        transform: translateY(-50%);
         z-index: 1;
     }
 }

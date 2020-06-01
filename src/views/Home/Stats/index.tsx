@@ -2,6 +2,10 @@ import React from 'react';
 import { _cs } from '@togglecorp/fujs';
 import { FaUserSecret } from 'react-icons/fa';
 
+import {
+    ROUND_DURATION,
+    gameModes,
+} from '#utils/constants';
 import { GameMode } from '#types';
 
 import styles from './styles.css';
@@ -20,13 +24,13 @@ function ElapsedOutput(p: ElapsedOutputProps) {
     return (
         <div className={styles.elapsedOutput}>
             <div className={styles.min}>
-                {minutes}
+                {minutes.toString().padStart(2, '00')}
             </div>
             <div className={styles.separator}>
                 :
             </div>
             <div className={styles.sec}>
-                {seconds}
+                {seconds.toString().padStart(2, '00')}
             </div>
         </div>
     );
@@ -35,16 +39,18 @@ function ElapsedOutput(p: ElapsedOutputProps) {
 interface TextOutputProps {
     value: React.ReactNode;
     label: React.ReactNode;
+    className?: string;
 }
 
 function TextOutput(p: TextOutputProps) {
     const {
         label,
         value,
+        className,
     } = p;
 
     return (
-        <div className={styles.textOutput}>
+        <div className={_cs(className, styles.textOutput)}>
             <div className={styles.label}>
                 { label }
             </div>
@@ -56,43 +62,40 @@ function TextOutput(p: TextOutputProps) {
 }
 
 interface Props {
-    elapsed: number;
+    lapElapsed: number;
     mode: GameMode;
     username: string;
     className?: string;
-    round: number;
 }
 
 function Stats(props: Props) {
     const {
-        elapsed,
+        lapElapsed,
         mode,
         username,
         className,
-        round,
     } = props;
 
     return (
         <div className={_cs(className, styles.stats)}>
             <TextOutput
-                label={<FaUserSecret />}
-                value={username}
+                className={styles.gameMode}
+                label="Game type:"
+                value={gameModes[mode]}
             />
             <TextOutput
-                label="Game mode:"
-                value={mode}
-            />
-            <TextOutput
-                label="Round:"
-                value={round + 1}
-            />
-            <TextOutput
-                label="Time elapsed:"
+                className={styles.timeRemaining}
+                label="Time remaining:"
                 value={(
                     <ElapsedOutput
-                        value={elapsed}
+                        value={ROUND_DURATION - lapElapsed}
                     />
                 )}
+            />
+            <TextOutput
+                className={styles.username}
+                label={<FaUserSecret />}
+                value={username}
             />
         </div>
     );

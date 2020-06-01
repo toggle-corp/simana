@@ -1,5 +1,35 @@
 .challenge {
+    --round-duration: 15000ms;
     text-shadow: 0 0 3px var(--color-foreground);
     font-size: var(--font-size-ultra-large);
     font-weight: var(--font-weight-bold);
+
+    .title {
+        opacity: 0;
+        animation: appear .2s 1s ease-in-out forwards, dissapear .2s calc(var(--round-duration) - 1s) ease-in-out forwards;
+    }
+}
+
+@keyframes dissapear {
+    from {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    to {
+        transform: translateY(10px);
+        opacity: 0;
+    }
+}
+
+@keyframes appear {
+    from {
+        transform: translateY(-10px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }

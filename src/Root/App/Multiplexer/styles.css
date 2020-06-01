@@ -2,9 +2,8 @@
     display: flex;
     position: relative;
     flex-direction: column;
-    margin: auto;
     background-color: var(--color-background);
-    width: 80vw;
+    width: 100vw;
     height: 100vh;
 
     .navbar {

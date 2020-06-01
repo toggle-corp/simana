@@ -2,6 +2,9 @@ import React from 'react';
 import {
     districts,
     provinces,
+    ROUND_DURATION,
+    MAX_ROUNDS,
+    MAX_ATTEMPTS,
 } from '#utils/constants';
 
 import {
@@ -96,9 +99,6 @@ export function useTimer(
     };
 }
 
-const ROUND_DURATION = 10000;
-const MAX_ROUNDS = 10;
-
 export function useGameplay(
     gameId: string | number,
     gameState: GameState,
@@ -141,10 +141,8 @@ export function useGameplay(
 
         if (currentChallenge?.answer === answer) {
             updatedChallenge.result = 'pass';
-            // console.warn('correct answer');
-        } else {
+        } else if (updatedChallenge.attempts.length >= MAX_ATTEMPTS) {
             updatedChallenge.result = 'fail';
-            // console.warn('An attempt was made', answer);
         }
 
         const newChallenges = [...challenges];
@@ -154,7 +152,6 @@ export function useGameplay(
 
     if (gameState === 'play') {
         let currentRound = round;
-        console.info('current round', round);
         const currentChallenge = challenges[round];
 
         if (currentChallenge?.result) {
@@ -181,5 +178,6 @@ export function useGameplay(
         round,
         challenges,
         addAttempt,
+        lapElapsed,
     };
 }

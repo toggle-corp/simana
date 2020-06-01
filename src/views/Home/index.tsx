@@ -9,6 +9,7 @@ import {
     BBox,
     GameMode,
     GameState,
+    Message,
 } from '#types';
 import { useGameplay } from '#hooks';
 
@@ -18,6 +19,8 @@ import AfterGameModal from './AfterGameModal';
 import RegionMap from './RegionMap';
 import Stats from './Stats';
 import Challenge from './Challenge';
+import ScoreBoard from './ScoreBoard';
+import MessageView from './Message';
 
 import styles from './styles.css';
 
@@ -26,7 +29,7 @@ interface Props {
 }
 
 // const lightStyle = 'mapbox://styles/mapbox/light-v10';
-const blankStyle = 'mapbox://styles/togglecorp/ck9av67fu0i441ipd23xm7o0w';
+const blankStyle = 'mapbox://styles/togglecorp/ckawhdhe23if41ipd9kcwxaa6';
 
 const defaultBounds: BBox = [
     80.05858661752784,
@@ -40,10 +43,12 @@ function Home(props: Props): React.ReactElement {
     const { className } = props;
     const [gameId, setGameId] = React.useState(new Date().getTime());
 
+    const [message, setMessage] = React.useState<Message | undefined>(undefined);
     const [gameState, setGameState] = React.useState<GameState>('user-info');
 
     const [name, setName] = React.useState('fhx');
     const [mode, setMode] = React.useState<GameMode | undefined>(undefined);
+    const answerRef = React.useRef<string | undefined>(undefined);
 
     const handleGameplayEnd = React.useCallback(() => {
         setGameState('finished');
@@ -52,10 +57,15 @@ function Home(props: Props): React.ReactElement {
 
     const {
         round,
-        elapsed,
+        lapElapsed,
         addAttempt,
         challenges,
     } = useGameplay(gameId, gameState, mode, handleGameplayEnd);
+
+    React.useEffect(() => {
+        const challange = challenges[round];
+        answerRef.current = challange?.answer;
+    }, [challenges, round, answerRef]);
 
     React.useEffect(() => {
         let timeout: number | undefined;
@@ -84,9 +94,20 @@ function Home(props: Props): React.ReactElement {
     }, [setGameState]);
 
     const handleRegionClick = React.useCallback((properties) => {
-        console.info('You clicked on', properties.title);
         addAttempt(properties.code);
-    }, [addAttempt]);
+
+        if (properties.code === answerRef.current) {
+            setMessage({
+                text: 'Amazing!',
+                timestamp: new Date().getTime(),
+            });
+        } else {
+            setMessage({
+                text: `Oops! you clicked on ${properties.title}`,
+                timestamp: new Date().getTime(),
+            });
+        }
+    }, [addAttempt, setMessage, answerRef]);
 
     return (
         <div className={_cs(className, styles.home)}>
@@ -103,7 +124,7 @@ function Home(props: Props): React.ReactElement {
             >
                 <MapBounds
                     bounds={defaultBounds}
-                    padding={120}
+                    padding={200}
                 />
                 <MapContainer className={styles.mapContainer} />
                 { mode && (
@@ -114,16 +135,27 @@ function Home(props: Props): React.ReactElement {
                 )}
             </Map>
             {mode && (gameState === 'play' || gameState === 'initialize') && (
-                <Stats
-                    className={styles.stats}
-                    mode={mode}
-                    username={name}
-                    elapsed={elapsed}
-                    round={round}
-                />
+                <>
+                    <Stats
+                        className={styles.stats}
+                        mode={mode}
+                        username={name}
+                        lapElapsed={lapElapsed}
+                    />
+                    <ScoreBoard
+                        className={styles.scoreBoard}
+                        round={round}
+                        challenges={challenges}
+                    />
+                </>
             )}
+            <MessageView
+                className={styles.message}
+                message={message}
+            />
             { gameState === 'play' && (
                 <Challenge
+                    round={round}
                     className={styles.challenge}
                     challenge={challenges[round]}
                 />
