@@ -205,12 +205,12 @@ module.exports = (env) => {
                 skipWaiting: true,
                 include: [/\.html$/, /\.js$/, /\.css$/],
                 navigateFallback: '/index.html',
-                navigateFallbackBlacklist: [/^\/assets/, /^\/admin/, /^\/api/],
+                navigateFallbackDenylist: [/^\/assets/, /^\/admin/, /^\/api/],
                 cleanupOutdatedCaches: true,
                 runtimeCaching: [
                     {
                         urlPattern: /assets/,
-                        handler: 'cacheFirst',
+                        handler: 'CacheFirst',
                     },
                 ],
             }),
