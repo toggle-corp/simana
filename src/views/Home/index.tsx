@@ -17,7 +17,7 @@ import GameModeSelectionModal from './GameModeSelectionModal';
 import AfterGameModal from './AfterGameModal';
 import RegionMap from './RegionMap';
 import Stats from './Stats';
-import Challange from './Challange';
+import Challenge from './Challenge';
 
 import styles from './styles.css';
 
@@ -54,7 +54,7 @@ function Home(props: Props): React.ReactElement {
         round,
         elapsed,
         addAttempt,
-        challanges,
+        challenges,
     } = useGameplay(gameId, gameState, mode, handleGameplayEnd);
 
     React.useEffect(() => {
@@ -119,9 +119,9 @@ function Home(props: Props): React.ReactElement {
                 />
             )}
             { gameState === 'play' && (
-                <Challange
-                    className={styles.challange}
-                    challange={challanges[round]}
+                <Challenge
+                    className={styles.challenge}
+                    challenge={challenges[round]}
                 />
             )}
             { gameState === 'initialize' && (
@@ -150,7 +150,7 @@ function Home(props: Props): React.ReactElement {
             { gameState === 'finished' && (
                 <AfterGameModal
                     score={round}
-                    challanges={challanges}
+                    challenges={challenges}
                     onPlayAgainClick={handlePlayAgainButtonClick}
                 />
             )}

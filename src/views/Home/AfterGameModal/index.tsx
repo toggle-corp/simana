@@ -3,30 +3,30 @@ import React from 'react';
 import Haze from '#components/Haze';
 import Button from '#components/Button';
 
-import { Challange } from '#types';
+import { Challenge } from '#types';
 
 import styles from './styles.css';
 
 interface Props {
     onPlayAgainClick: () => void;
-    challanges: Challange[];
+    challenges: Challenge[];
 }
 
 function AfterGameModal(props: Props): React.ReactElement {
     const {
         onPlayAgainClick,
-        challanges,
+        challenges,
     } = props;
 
     const score = React.useMemo(() => (
-        challanges.reduce((acc, val) => {
+        challenges.reduce((acc, val) => {
             if (val.result === 'pass') {
                 return acc + 500;
             }
 
             return acc;
         }, 0)
-    ), [challanges]);
+    ), [challenges]);
 
     return (
         <Haze>

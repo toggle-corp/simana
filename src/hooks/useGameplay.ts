@@ -5,7 +5,7 @@ import {
 } from '#utils/constants';
 
 import {
-    Challange,
+    Challenge,
     GameMode,
     GameState,
     Region,
@@ -112,19 +112,19 @@ export function useGameplay(
         lapElapsed,
     } = useTimer(gameState === 'play');
     const [round, setRound] = React.useState(0);
-    const [challanges, setChallanges] = React.useState<Challange[]>([]);
+    const [challenges, setChallenges] = React.useState<Challenge[]>([]);
 
 
     React.useEffect(() => {
         if (gameMode && gameState === 'initialize') {
             const randomRegions = getRandomRegions(gameMode, MAX_ROUNDS);
-            const newChallanges = randomRegions.map((region) => ({
+            const newChallenges = randomRegions.map((region) => ({
                 title: `Find ${region.title}`,
                 answer: region.code,
                 result: undefined,
                 attempts: [],
             }));
-            setChallanges(newChallanges);
+            setChallenges(newChallenges);
         }
 
         if (gameMode && gameState === 'play') {
@@ -132,32 +132,32 @@ export function useGameplay(
             addLap();
             console.info('setting round......');
         }
-    }, [gameState, setChallanges, gameId, gameMode, setRound, addLap]);
+    }, [gameState, setChallenges, gameId, gameMode, setRound, addLap]);
 
     const addAttempt = React.useCallback((answer) => {
-        const currentChallange = challanges[round];
-        const updatedChallange = { ...currentChallange };
-        updatedChallange.attempts = [...currentChallange.attempts, answer];
+        const currentChallenge = challenges[round];
+        const updatedChallenge = { ...currentChallenge };
+        updatedChallenge.attempts = [...currentChallenge.attempts, answer];
 
-        if (currentChallange?.answer === answer) {
-            updatedChallange.result = 'pass';
+        if (currentChallenge?.answer === answer) {
+            updatedChallenge.result = 'pass';
             // console.warn('correct answer');
         } else {
-            updatedChallange.result = 'fail';
+            updatedChallenge.result = 'fail';
             // console.warn('An attempt was made', answer);
         }
 
-        const newChallanges = [...challanges];
-        newChallanges.splice(round, 1, updatedChallange);
-        setChallanges(newChallanges);
-    }, [challanges, round, setChallanges]);
+        const newChallenges = [...challenges];
+        newChallenges.splice(round, 1, updatedChallenge);
+        setChallenges(newChallenges);
+    }, [challenges, round, setChallenges]);
 
     if (gameState === 'play') {
         let currentRound = round;
         console.info('current round', round);
-        const currentChallange = challanges[round];
+        const currentChallenge = challenges[round];
 
-        if (currentChallange?.result) {
+        if (currentChallenge?.result) {
             currentRound += 1;
             addLap();
         }
@@ -179,7 +179,7 @@ export function useGameplay(
         tick,
         elapsed,
         round,
-        challanges,
+        challenges,
         addAttempt,
     };
 }

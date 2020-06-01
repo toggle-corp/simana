@@ -4,7 +4,7 @@ export type BBox = [number, number, number, number];
 export type GameState = 'user-info' | 'mode-selection' | 'initialize' | 'play' | 'finished';
 export type GameMode = 'province' | 'district';
 
-export interface Challange {
+export interface Challenge {
     title: string;
     answer: string;
     result: 'pass' | 'fail' | undefined;
