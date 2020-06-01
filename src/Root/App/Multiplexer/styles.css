@@ -1,10 +1,10 @@
 .multiplexer {
     display: flex;
-    flex-direction: column;
-    width: 80vw;
-    background-color: var(--color-background);
-    margin: auto;
     position: relative;
+    flex-direction: column;
+    margin: auto;
+    background-color: var(--color-background);
+    width: 80vw;
     height: 100vh;
 
     .navbar {

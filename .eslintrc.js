@@ -32,9 +32,10 @@ module.exports = {
                     '#ts': './src/ts',
                     '#utils': './src/utils',
                     '#views': './src/views',
+
                     '#types': './src/types',
                     '#hooks': './src/hooks',
-                    '#remap': './src/vendor/re-map',
+                    '#re-map': './src/vendor/re-map',
                 },
             },
         },

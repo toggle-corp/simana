@@ -4,7 +4,7 @@ export interface Route {
     path: string;
     name: string;
     title: string;
-    load: React.ExoticComponent;
+    load: React.ExoticComponent<{ className?: string }>;
 
     hideNavbar?: boolean;
 }
@@ -14,7 +14,7 @@ export interface FallbackRoute {
     path: undefined;
     name: string;
     title: string;
-    load: React.ExoticComponent;
+    load: React.ExoticComponent<{ className?: string }>;
 
     hideNavbar?: boolean;
 }
