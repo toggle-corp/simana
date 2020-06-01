@@ -7,7 +7,7 @@ import mapTheme from './mapTheme';
 
 interface Props {
     mode: GameMode;
-    onRegionClick: (p: { code: string }) => void;
+    onRegionClick: (p: mapboxgl.MapboxGeoJSONFeature['properties']) => void;
 }
 
 const noOp = () => { console.warn('entering/leaving'); };
@@ -39,20 +39,24 @@ function RegionMap(props: Props) {
         onRegionClick,
     } = props;
 
-    const handleProvinceClick = React.useCallback((e) => {
+    const handleProvinceClick = React.useCallback((e: mapboxgl.MapboxGeoJSONFeature) => {
         const { properties } = e;
 
         if (onRegionClick) {
             onRegionClick(properties);
         }
+
+        return undefined;
     }, [onRegionClick]);
 
-    const handleDistrictClick = React.useCallback((e) => {
+    const handleDistrictClick = React.useCallback((e: mapboxgl.MapboxGeoJSONFeature) => {
         const { properties } = e;
 
         if (onRegionClick) {
             onRegionClick(properties);
         }
+
+        return undefined;
     }, [onRegionClick]);
 
     return (

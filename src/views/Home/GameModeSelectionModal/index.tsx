@@ -4,6 +4,7 @@ import { GrMapLocation } from 'react-icons/gr';
 import Haze from '#components/Haze';
 import Button from '#components/Button';
 
+import { GameMode } from '#types';
 import { gameModes } from '#utils/constants';
 
 import styles from './styles.css';
@@ -38,7 +39,7 @@ function GameModeSelectionModal(props: Props): React.ReactElement {
                         >
                             <header className={styles.header}>
                                 <h3 className={styles.heading}>
-                                    { gameModes[mk] }
+                                    { gameModes[mk as GameMode] }
                                 </h3>
                             </header>
                             <div className={styles.content}>

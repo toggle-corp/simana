@@ -102,7 +102,7 @@ const MAX_ROUNDS = 10;
 export function useGameplay(
     gameId: string | number,
     gameState: GameState,
-    gameMode: GameMode,
+    gameMode: GameMode | undefined,
     onGameplayEnd: () => void,
 ) {
     const {

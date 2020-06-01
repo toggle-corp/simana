@@ -1,4 +1,4 @@
-const provinceFillPaint: mapboxgl.LinePaint = {
+const provinceFillPaint: mapboxgl.FillPaint = {
     'fill-color': '#dbe3be',
     'fill-opacity': [
         'case',
@@ -8,7 +8,7 @@ const provinceFillPaint: mapboxgl.LinePaint = {
     ],
 };
 
-const districtFillPaint : mapboxgl.LinePaint = {
+const districtFillPaint : mapboxgl.FillPaint = {
     'fill-color': '#dbe3be',
     'fill-opacity': [
         'case',

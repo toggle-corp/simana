@@ -98,18 +98,22 @@ function Home(props: Props): React.ReactElement {
                     bounds: defaultBounds,
                     interactive: false,
                 }}
+                scaleControlShown={false}
+                navControlShown={false}
             >
                 <MapBounds
                     bounds={defaultBounds}
                     padding={120}
                 />
                 <MapContainer className={styles.mapContainer} />
-                <RegionMap
-                    mode={mode}
-                    onRegionClick={handleRegionClick}
-                />
+                { mode && (
+                    <RegionMap
+                        mode={mode}
+                        onRegionClick={handleRegionClick}
+                    />
+                )}
             </Map>
-            {(gameState === 'play' || gameState === 'initialize') && (
+            {mode && (gameState === 'play' || gameState === 'initialize') && (
                 <Stats
                     className={styles.stats}
                     mode={mode}
@@ -149,7 +153,6 @@ function Home(props: Props): React.ReactElement {
             )}
             { gameState === 'finished' && (
                 <AfterGameModal
-                    score={round}
                     challenges={challenges}
                     onPlayAgainClick={handlePlayAgainButtonClick}
                 />
