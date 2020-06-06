@@ -3,9 +3,14 @@ import {
     districts,
     provinces,
     ROUND_DURATION,
-    MAX_ROUNDS,
     MAX_ATTEMPTS,
 } from '#utils/constants';
+
+import {
+    shuffle,
+    getMaxRounds,
+    getMaxDuration,
+} from '#utils/common';
 
 import {
     Challenge,
@@ -21,25 +26,24 @@ const regionMap: {
 } = {
     district: districts,
     province: provinces,
+    provinceFixed: provinces,
+    districtFixed: districts,
 };
 
-const getRandomRegions = (mode: GameMode, amount: number) => {
-    const regions = regionMap[mode];
-    const randomRegions = [...Array(amount).keys()].map(() => {
-        const randomIndex = Math.floor(Math.random() * Math.floor(regions.length));
-        const region = regions[randomIndex];
+const getRegions = (mode: GameMode, amount: number) => {
+    const shuffledRegions = shuffle(regionMap[mode])
+        .slice(0, amount)
+        .map((r) => ({
+            code: r.code,
+            title: r.title,
+        }));
 
-        return {
-            code: region.code,
-            title: region.title,
-        };
-    });
-
-    return randomRegions;
+    return shuffledRegions;
 };
 
 export function useTimer(
     use: boolean,
+    gameId: number | string,
     tickInterval:number = DEFAULT_TICK_INTERVAL,
 ) {
     const [tick, setTick] = React.useState(0);
@@ -60,7 +64,7 @@ export function useTimer(
         if (use) {
             setInitialTime(new Date().getTime());
         }
-    }, [use, shouldTick, setInitialTime]);
+    }, [use, gameId, shouldTick, setInitialTime]);
 
     const handleTick = React.useCallback(() => {
         const { current } = shouldTick;
@@ -110,15 +114,16 @@ export function useGameplay(
         elapsed,
         addLap,
         lapElapsed,
-    } = useTimer(gameState === 'play');
+    } = useTimer(gameState === 'play', gameId);
     const [round, setRound] = React.useState(0);
     const [challenges, setChallenges] = React.useState<Challenge[]>([]);
 
 
     React.useEffect(() => {
         if (gameMode && gameState === 'initialize') {
-            const randomRegions = getRandomRegions(gameMode, MAX_ROUNDS);
-            const newChallenges = randomRegions.map((region) => ({
+            const maxRounds = getMaxRounds(gameMode);
+            const regions = getRegions(gameMode, maxRounds);
+            const newChallenges = regions.map((region) => ({
                 title: `Find ${region.title}`,
                 answer: region.code,
                 result: undefined,
@@ -126,13 +131,15 @@ export function useGameplay(
             }));
             setChallenges(newChallenges);
         }
+    }, [gameState, setChallenges, gameId, gameMode, setRound, addLap]);
 
+    React.useEffect(() => {
         if (gameMode && gameState === 'play') {
             setRound(0);
             addLap();
             console.info('setting round......');
         }
-    }, [gameState, setChallenges, gameId, gameMode, setRound, addLap]);
+    }, [gameMode, gameState, setRound, addLap]);
 
     const addAttempt = React.useCallback((answer) => {
         const currentChallenge = challenges[round];
@@ -150,27 +157,51 @@ export function useGameplay(
         setChallenges(newChallenges);
     }, [challenges, round, setChallenges]);
 
-    if (gameState === 'play') {
-        let currentRound = round;
-        const currentChallenge = challenges[round];
+    React.useEffect(() => {
+        if (gameMode && gameState === 'play') {
+            let currentRound = round;
+            const currentChallenge = challenges[round];
 
-        if (currentChallenge?.result) {
-            currentRound += 1;
-            addLap();
-        }
+            if (currentChallenge?.result) {
+                currentRound += 1;
+                addLap();
+            }
 
-        if (lapElapsed >= ROUND_DURATION) {
-            currentRound += 1;
-            addLap();
-        }
+            switch (gameMode) {
+                case 'provinceFixed':
+                case 'districtFixed':
+                    if (lapElapsed >= ROUND_DURATION) {
+                        currentRound += 1;
+                        addLap();
+                    }
+                    break;
 
-        if (currentRound >= MAX_ROUNDS) {
-            setRound(0);
-            onGameplayEnd();
-        } else if (currentRound !== round) {
-            setRound(currentRound);
+                case 'province':
+                case 'district':
+                default:
+                    break;
+            }
+
+            const maxRounds = getMaxRounds(gameMode);
+            const gameEnded = currentRound >= maxRounds || elapsed >= getMaxDuration(gameMode);
+            if (gameEnded) {
+                setRound(0);
+                onGameplayEnd();
+            } else if (currentRound !== round) {
+                setRound(currentRound);
+            }
         }
-    }
+    }, [
+        gameMode,
+        gameState,
+        addLap,
+        setRound,
+        onGameplayEnd,
+        round,
+        challenges,
+        lapElapsed,
+        elapsed,
+    ]);
 
     return {
         tick,

@@ -3,12 +3,11 @@ import { _cs } from '@togglecorp/fujs';
 
 import {
     Challenge,
+    GameMode,
 } from '#types';
 
-import {
-    MAX_ROUNDS,
-    MAX_ATTEMPTS,
-} from '#utils/constants';
+import { MAX_ATTEMPTS } from '#utils/constants';
+import { getMaxRounds } from '#utils/common';
 
 import styles from './styles.css';
 
@@ -55,6 +54,7 @@ interface Props {
     challenges: Challenge[]
     className?: string;
     round: number;
+    mode: GameMode,
 }
 
 function ScoreBoard(props: Props) {
@@ -62,6 +62,7 @@ function ScoreBoard(props: Props) {
         className,
         round,
         challenges,
+        mode,
     } = props;
 
     const score = React.useMemo(() => (
@@ -83,9 +84,9 @@ function ScoreBoard(props: Props) {
                 value={score}
             />
             <TextOutput
-                label="Rounds"
+                label="Round"
                 value={round + 1}
-                limit={MAX_ROUNDS}
+                limit={getMaxRounds(mode)}
             />
             <TextOutput
                 label="Attempts"

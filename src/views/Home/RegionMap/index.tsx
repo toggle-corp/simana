@@ -68,7 +68,7 @@ function RegionMap(props: Props) {
                     url: mapSources.nepal.url,
                 }}
             >
-                { mode === 'province' && (
+                { (mode === 'province' || mode === 'provinceFixed') && (
                     <>
                         <MapLayer
                             layerKey="province-fill"
@@ -91,7 +91,7 @@ function RegionMap(props: Props) {
                         />
                     </>
                 )}
-                { mode === 'district' && (
+                { (mode === 'district' || mode === 'districtFixed') && (
                     <>
                         <MapLayer
                             layerKey="district-fill"

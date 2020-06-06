@@ -63,6 +63,7 @@ function TextOutput(p: TextOutputProps) {
 
 interface Props {
     lapElapsed: number;
+    elapsed: number;
     mode: GameMode;
     username: string;
     className?: string;
@@ -71,10 +72,12 @@ interface Props {
 function Stats(props: Props) {
     const {
         lapElapsed,
+        elapsed,
         mode,
         username,
         className,
     } = props;
+
 
     return (
         <div className={_cs(className, styles.stats)}>
@@ -83,15 +86,27 @@ function Stats(props: Props) {
                 label="Game type:"
                 value={gameModes[mode]}
             />
-            <TextOutput
-                className={styles.timeRemaining}
-                label="Time remaining:"
-                value={(
-                    <ElapsedOutput
-                        value={ROUND_DURATION - lapElapsed}
-                    />
-                )}
-            />
+            {(mode === 'province' || mode === 'district') ? (
+                <TextOutput
+                    className={styles.timeRemaining}
+                    label="Time elapsed:"
+                    value={(
+                        <ElapsedOutput
+                            value={elapsed}
+                        />
+                    )}
+                />
+            ) : (
+                <TextOutput
+                    className={styles.timeRemaining}
+                    label="Time remaining:"
+                    value={(
+                        <ElapsedOutput
+                            value={ROUND_DURATION - lapElapsed}
+                        />
+                    )}
+                />
+            )}
             <TextOutput
                 className={styles.username}
                 label={<FaUserSecret />}

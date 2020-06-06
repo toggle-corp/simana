@@ -1,8 +1,12 @@
 import React from 'react';
 import { _cs } from '@togglecorp/fujs';
 
-import { Challenge } from '#types';
+import {
+    Challenge,
+    GameMode,
+} from '#types';
 import { ROUND_DURATION } from '#utils/constants';
+import { getMaxDuration } from '#utils/common';
 
 import styles from './styles.css';
 
@@ -10,6 +14,7 @@ interface Props {
     className?: string;
     challenge: Challenge;
     round: number;
+    mode?: GameMode;
 }
 
 function ChallengeView(p: Props) {
@@ -17,6 +22,7 @@ function ChallengeView(p: Props) {
         challenge,
         className,
         round,
+        mode,
     } = p;
 
     const ref = React.useRef<HTMLDivElement>(null);
@@ -24,9 +30,13 @@ function ChallengeView(p: Props) {
     React.useEffect(() => {
         const { current } = ref;
         if (current) {
-            current.style.setProperty('--round-duration', `${ROUND_DURATION}ms`);
+            if (mode === 'province' || mode === 'district') {
+                current.style.setProperty('--round-duration', `${getMaxDuration(mode)}ms`);
+            } else {
+                current.style.setProperty('--round-duration', `${ROUND_DURATION}ms`);
+            }
         }
-    }, [ref]);
+    }, [ref, mode]);
 
     return (
         <div

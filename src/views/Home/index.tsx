@@ -57,6 +57,7 @@ function Home(props: Props): React.ReactElement {
 
     const {
         round,
+        elapsed,
         lapElapsed,
         addAttempt,
         challenges,
@@ -141,8 +142,10 @@ function Home(props: Props): React.ReactElement {
                         mode={mode}
                         username={name}
                         lapElapsed={lapElapsed}
+                        elapsed={elapsed}
                     />
                     <ScoreBoard
+                        mode={mode}
                         className={styles.scoreBoard}
                         round={round}
                         challenges={challenges}
@@ -158,6 +161,7 @@ function Home(props: Props): React.ReactElement {
                     round={round}
                     className={styles.challenge}
                     challenge={challenges[round]}
+                    mode={mode}
                 />
             )}
             { gameState === 'initialize' && (

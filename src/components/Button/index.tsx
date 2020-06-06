@@ -8,6 +8,7 @@ interface Props<T> {
     name?: T,
     children: React.ReactNode;
     onClick: (name?: T) => void;
+    type?: 'button' | 'submit';
 }
 
 function Button<T=string>(props: Props<T>): React.ReactElement {
@@ -16,6 +17,7 @@ function Button<T=string>(props: Props<T>): React.ReactElement {
         className,
         onClick,
         name,
+        type,
     } = props;
 
     const handleClick = React.useCallback(() => {
@@ -26,7 +28,8 @@ function Button<T=string>(props: Props<T>): React.ReactElement {
 
     return (
         <button
-            type="button"
+            // eslint-disable-next-line react/button-has-type
+            type={type}
             className={_cs(className, styles.button)}
             onClick={handleClick}
         >
@@ -34,5 +37,9 @@ function Button<T=string>(props: Props<T>): React.ReactElement {
         </button>
     );
 }
+
+Button.defaultProps = {
+    type: 'button',
+};
 
 export default Button;

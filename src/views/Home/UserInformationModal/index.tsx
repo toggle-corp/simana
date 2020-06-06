@@ -15,7 +15,9 @@ function UserInformationModal(props: Props): React.ReactElement {
     const { onStartClick } = props;
 
     const [name, setName] = React.useState('');
-    const handleStartClick = React.useCallback(() => {
+    const handleSubmit = React.useCallback((e) => {
+        e.preventDefault();
+
         if (onStartClick) {
             onStartClick(name || 'Anonymous User');
         }
@@ -29,7 +31,10 @@ function UserInformationModal(props: Props): React.ReactElement {
                         { appName }
                     </h2>
                 </header>
-                <div className={styles.content}>
+                <form
+                    className={styles.content}
+                    onSubmit={handleSubmit}
+                >
                     <div className={styles.avatar}>
                         <FaUserSecret className={styles.icon} />
                     </div>
@@ -38,14 +43,15 @@ function UserInformationModal(props: Props): React.ReactElement {
                             value={name}
                             onChange={setName}
                             label="Enter nickname"
+                            autoFocus
                         />
                     </div>
                     <div className={styles.actions}>
-                        <Button onClick={handleStartClick}>
+                        <Button type="submit">
                             Start
                         </Button>
                     </div>
-                </div>
+                </form>
             </div>
         </Haze>
     );

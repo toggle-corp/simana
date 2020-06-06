@@ -3,11 +3,20 @@ export const appName = 'Nepal Geo Explorer';
 export const gameModes = {
     province: 'Province mode',
     district: 'District mode',
+    provinceFixed: 'Province fixed mode',
+    districtFixed: 'District fixed mode',
 };
 
-export const ROUND_DURATION = 15000;
-export const MAX_ROUNDS = 10;
+export const ONE_SECOND = 1000;
+export const ONE_MINUTE = 60 * ONE_SECOND;
+
+export const ROUND_DURATION = 5 * ONE_SECOND;
 export const MAX_ATTEMPTS = 3;
+
+export const TOTAL_PROVINCES = 7;
+export const TOTAL_DISTRICTS = 77;
+export const PROVINCE_MAX_ROUNDS = 5;
+export const DISTRICTS_MAX_ROUNDS = 10;
 
 
 export const provinces = [
