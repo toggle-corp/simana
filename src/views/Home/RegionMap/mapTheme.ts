@@ -1,43 +1,43 @@
 const provinceFillPaint: mapboxgl.FillPaint = {
-    'fill-color': '#dbe3be',
+    'fill-color': '#759bab',
     'fill-opacity': [
         'case',
         ['==', ['feature-state', 'hovered'], true],
         1,
-        0.3,
+        0.8,
     ],
 };
 
 const districtFillPaint : mapboxgl.FillPaint = {
-    'fill-color': '#dbe3be',
+    'fill-color': '#759bab',
     'fill-opacity': [
         'case',
         ['==', ['feature-state', 'hovered'], true],
         1,
-        0.3,
+        0.8,
     ],
 };
 
 const provinceOutlinePaint: mapboxgl.LinePaint = {
-    'line-color': '#006e90',
-    'line-width': 2,
-    'line-opacity': [
+    'line-color': [
         'case',
         ['==', ['feature-state', 'hovered'], true],
-        0.9,
-        0.7,
+        '#ffffff',
+        '#fffff0',
     ],
+    'line-width': 1,
+    'line-opacity': 1,
 };
 
 const districtOutlinePaint: mapboxgl.LinePaint = {
-    'line-color': '#006e90',
-    'line-width': 1.2,
-    'line-opacity': [
+    'line-color': [
         'case',
         ['==', ['feature-state', 'hovered'], true],
-        0.9,
-        0.7,
+        '#ffffff',
+        '#fffff0',
     ],
+    'line-width': 1,
+    'line-opacity': 1,
 };
 
 const mapTheme = {

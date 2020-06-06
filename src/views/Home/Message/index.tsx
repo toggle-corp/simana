@@ -17,7 +17,7 @@ function MessageView(props: Props) {
     } = props;
 
     return (
-        <div className={_cs(className, styles.message)}>
+        <div className={_cs(className, styles.message, message?.type === 'bad' && styles.bad)}>
             <div
                 key={message?.timestamp}
                 className={styles.current}

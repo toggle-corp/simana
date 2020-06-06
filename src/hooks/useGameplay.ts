@@ -130,6 +130,7 @@ export function useGameplay(
                 attempts: [],
             }));
             setChallenges(newChallenges);
+            console.info('initializing......');
         }
     }, [gameState, setChallenges, gameId, gameMode, setRound, addLap]);
 

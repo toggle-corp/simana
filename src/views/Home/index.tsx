@@ -1,5 +1,7 @@
 import React from 'react';
 import { _cs } from '@togglecorp/fujs';
+import { IoMdClose } from 'react-icons/io';
+import { GrPowerReset } from 'react-icons/gr';
 
 import Map from '#re-map';
 import MapContainer from '#re-map/MapContainer';
@@ -12,6 +14,8 @@ import {
     Message,
 } from '#types';
 import { useGameplay } from '#hooks';
+import { getRandomPositiveMessage } from '#utils/common';
+import RoundButton from '#components/RoundButton';
 
 import UserInformationModal from './UserInformationModal';
 import GameModeSelectionModal from './GameModeSelectionModal';
@@ -72,7 +76,7 @@ function Home(props: Props): React.ReactElement {
         let timeout: number | undefined;
         if (gameState === 'initialize') {
             const delay = 3000;
-            console.info('game starts in', delay / 3000);
+            console.info('game starts in', delay / 1000);
             timeout = window.setTimeout(() => { setGameState('play'); }, delay);
         }
         return () => { window.clearTimeout(timeout); };
@@ -91,21 +95,39 @@ function Home(props: Props): React.ReactElement {
     }, [setMode, setGameId]);
 
     const handlePlayAgainButtonClick = React.useCallback(() => {
+        setGameState('initialize');
+        setGameId(new Date().getTime());
+    }, [setGameState, setGameId]);
+    const handleNicknameButtonClick = React.useCallback(() => {
+        setGameState('user-info');
+    }, [setGameState]);
+    const handleGameModeButtonClick = React.useCallback(() => {
         setGameState('mode-selection');
     }, [setGameState]);
+
+    const handleSurrenderButtonClick = React.useCallback(() => {
+        setGameState('finished');
+    }, [setGameState]);
+
+    const handleRestartRoundButtonClick = React.useCallback(() => {
+        setGameState('initialize');
+        setGameId(new Date().getTime());
+    }, [setGameState, setGameId]);
 
     const handleRegionClick = React.useCallback((properties) => {
         addAttempt(properties.code);
 
         if (properties.code === answerRef.current) {
             setMessage({
-                text: 'Amazing!',
+                text: getRandomPositiveMessage(),
                 timestamp: new Date().getTime(),
+                type: 'good',
             });
         } else {
             setMessage({
                 text: `Oops! you clicked on ${properties.title}`,
                 timestamp: new Date().getTime(),
+                type: 'bad',
             });
         }
     }, [addAttempt, setMessage, answerRef]);
@@ -191,7 +213,25 @@ function Home(props: Props): React.ReactElement {
                 <AfterGameModal
                     challenges={challenges}
                     onPlayAgainClick={handlePlayAgainButtonClick}
+                    onGameModeClick={handleGameModeButtonClick}
+                    onNicknameClick={handleNicknameButtonClick}
                 />
+            )}
+            { gameState === 'play' && (
+                <div className={styles.activeGameActions}>
+                    <RoundButton
+                        tooltip="Restart round"
+                        onClick={handleRestartRoundButtonClick}
+                    >
+                        <GrPowerReset />
+                    </RoundButton>
+                    <RoundButton
+                        onClick={handleSurrenderButtonClick}
+                        tooltip="End game"
+                    >
+                        <IoMdClose />
+                    </RoundButton>
+                </div>
             )}
         </div>
     );

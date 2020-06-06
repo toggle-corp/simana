@@ -99,7 +99,7 @@ function RegionMap(props: Props) {
                             layerOptions={{
                                 'source-layer': mapSources.nepal.layers.district,
                                 type: 'fill',
-                                paint: mapTheme.province.fillPaint,
+                                paint: mapTheme.district.fillPaint,
                             }}
                             onMouseEnter={noOp}
                             onMouseLeave={noOp}
@@ -109,7 +109,7 @@ function RegionMap(props: Props) {
                             layerOptions={{
                                 'source-layer': mapSources.nepal.layers.district,
                                 type: 'line',
-                                paint: mapTheme.province.outlinePaint,
+                                paint: mapTheme.district.outlinePaint,
                             }}
                         />
                     </>

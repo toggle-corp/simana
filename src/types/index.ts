@@ -19,4 +19,5 @@ export interface Region {
 export interface Message {
     text: string;
     timestamp: number;
+    type?: 'good' | 'bad';
 }

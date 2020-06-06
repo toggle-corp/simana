@@ -6,6 +6,7 @@ import {
     TOTAL_DISTRICTS,
     PROVINCE_MAX_ROUNDS,
     DISTRICTS_MAX_ROUNDS,
+    positiveMessageList,
 } from '#utils/constants';
 
 const modeToMaxRoundMap: {
@@ -42,4 +43,9 @@ export function shuffle(array: any[]) {
         [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
     }
     return newArray;
+}
+
+export function getRandomPositiveMessage() {
+    const randomIndex = Math.floor(Math.random() * positiveMessageList.length);
+    return positiveMessageList[randomIndex];
 }

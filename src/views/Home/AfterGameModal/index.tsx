@@ -9,6 +9,8 @@ import styles from './styles.css';
 
 interface Props {
     onPlayAgainClick: () => void;
+    onNicknameClick: () => void;
+    onGameModeClick: () => void;
     challenges: Challenge[];
 }
 
@@ -16,6 +18,8 @@ function AfterGameModal(props: Props): React.ReactElement {
     const {
         onPlayAgainClick,
         challenges,
+        onGameModeClick,
+        onNicknameClick,
     } = props;
 
     const score = React.useMemo(() => (
@@ -37,13 +41,21 @@ function AfterGameModal(props: Props): React.ReactElement {
                     </h2>
                 </header>
                 <div className={styles.content}>
-                    <div className={styles.scoreLabel}>
-                        Your score
-                    </div>
                     <div className={styles.score}>
-                        { score }
+                        <div className={styles.label}>
+                            Your score
+                        </div>
+                        <div className={styles.value}>
+                            { score }
+                        </div>
                     </div>
                     <div className={styles.actions}>
+                        <Button onClick={onNicknameClick}>
+                            Nickname
+                        </Button>
+                        <Button onClick={onGameModeClick}>
+                            Game mode
+                        </Button>
                         <Button onClick={onPlayAgainClick}>
                             Play again
                         </Button>

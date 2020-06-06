@@ -26,20 +26,33 @@
         justify-content: center;
         overflow: auto;
 
-        .score-label {
-            padding: var(--spacing-medium);
-            color: var(--color-text-label);
-            font-size: var(--font-size-large);
-            font-weight: var(--font-weight-bold);
-        }
-
         .score {
-            padding: var(--spacing-medium);
-            font-size: var(--font-size-ultra-large);
-            font-weight: var(--font-weight-bold);
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            flex-grow: 1;
+            justify-content: center;
+
+
+            .label {
+                padding: var(--spacing-medium);
+                color: var(--color-text-label);
+                font-size: var(--font-size-large);
+                font-weight: var(--font-weight-bold);
+            }
+
+            .value {
+                padding: var(--spacing-medium);
+                font-size: var(--font-size-ultra-large);
+                font-weight: var(--font-weight-bold);
+            }
         }
 
         .actions {
+            display: flex;
+            align-self: stretch;
+            flex-shrink: 0;
+            justify-content: space-around;
             padding: var(--spacing-medium);
         }
     }
