@@ -81,7 +81,10 @@ export function useTimer(
 
     const cleanUp = React.useCallback((interval) => {
         window.clearInterval(interval);
-    }, []);
+        if (!shouldTick.current) {
+            setElapsed(0);
+        }
+    }, [setElapsed, shouldTick]);
 
     React.useEffect(() => {
         let interval:number | undefined;
@@ -135,12 +138,13 @@ export function useGameplay(
     }, [gameState, setChallenges, gameId, gameMode, setRound, addLap]);
 
     React.useEffect(() => {
+        console.info('game state changed', gameState);
         if (gameMode && gameState === 'play') {
             setRound(0);
             addLap();
             console.info('setting round......');
         }
-    }, [gameMode, gameState, setRound, addLap]);
+    }, [gameId, gameMode, gameState, setRound, addLap]);
 
     const addAttempt = React.useCallback((answer) => {
         const currentChallenge = challenges[round];
@@ -158,51 +162,39 @@ export function useGameplay(
         setChallenges(newChallenges);
     }, [challenges, round, setChallenges]);
 
-    React.useEffect(() => {
-        if (gameMode && gameState === 'play') {
-            let currentRound = round;
-            const currentChallenge = challenges[round];
+    if (gameMode && gameState === 'play') {
+        let currentRound = round;
+        const currentChallenge = challenges[round];
 
-            if (currentChallenge?.result) {
-                currentRound += 1;
-                addLap();
-            }
-
-            switch (gameMode) {
-                case 'provinceFixed':
-                case 'districtFixed':
-                    if (lapElapsed >= ROUND_DURATION) {
-                        currentRound += 1;
-                        addLap();
-                    }
-                    break;
-
-                case 'province':
-                case 'district':
-                default:
-                    break;
-            }
-
-            const maxRounds = getMaxRounds(gameMode);
-            const gameEnded = currentRound >= maxRounds || elapsed >= getMaxDuration(gameMode);
-            if (gameEnded) {
-                setRound(0);
-                onGameplayEnd();
-            } else if (currentRound !== round) {
-                setRound(currentRound);
-            }
+        if (currentChallenge?.result) {
+            currentRound += 1;
+            addLap();
         }
-    }, [
-        gameMode,
-        gameState,
-        addLap,
-        setRound,
-        onGameplayEnd,
-        round,
-        challenges,
-        lapElapsed,
-        elapsed,
-    ]);
+
+        switch (gameMode) {
+            case 'provinceFixed':
+            case 'districtFixed':
+                if (lapElapsed >= ROUND_DURATION) {
+                    currentRound += 1;
+                    addLap();
+                }
+                break;
+
+            case 'province':
+            case 'district':
+            default:
+                break;
+        }
+
+        const maxRounds = getMaxRounds(gameMode);
+        const gameEnded = currentRound >= maxRounds || elapsed >= getMaxDuration(gameMode);
+        if (gameEnded) {
+            setRound(0);
+            onGameplayEnd();
+        } else if (currentRound !== round) {
+            setRound(currentRound);
+        }
+    }
 
     return {
         tick,
