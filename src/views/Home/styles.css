@@ -3,10 +3,19 @@
     position: relative;
     flex-direction: column;
     background-color: var(--color-background);
+    background-image: url('../../assets/background.png');
+    background-position: center center;
+    background-size: cover;
+    background-blend-mode: lighten;
     overflow: auto;
 
     .map-container {
         flex-grow: 1;
+        opacity: 1;
+
+        canvas {
+            outline: none;
+        }
     }
 
     .initialize-message {

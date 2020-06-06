@@ -1,15 +1,33 @@
 const provinceFillPaint: mapboxgl.FillPaint = {
-    'fill-color': '#759bab',
+    'fill-color': [
+        'case',
+        ['==', ['feature-state', 'clicked'], 'good'],
+        '#b9d993',
+        ['==', ['feature-state', 'clicked'], 'bad'],
+        '#da483d',
+        ['==', ['feature-state', 'hint'], 'neutral'],
+        '#223256',
+        '#759bab',
+    ],
     'fill-opacity': [
         'case',
         ['==', ['feature-state', 'hovered'], true],
         1,
-        0.8,
+        0.7,
     ],
 };
 
 const districtFillPaint : mapboxgl.FillPaint = {
-    'fill-color': '#759bab',
+    'fill-color': [
+        'case',
+        ['==', ['feature-state', 'clicked'], 'good'],
+        '#b9d993',
+        ['==', ['feature-state', 'clicked'], 'bad'],
+        '#da483d',
+        ['==', ['feature-state', 'hint'], 'neutral'],
+        '#223256',
+        '#759bab',
+    ],
     'fill-opacity': [
         'case',
         ['==', ['feature-state', 'hovered'], true],

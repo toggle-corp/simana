@@ -1,16 +1,23 @@
 import React from 'react';
 import MapSource from '#re-map/MapSource';
+import State from '#re-map/MapSource/MapState';
 import MapLayer from '#re-map/MapSource/MapLayer';
 
-import { GameMode } from '#types';
+import {
+    GameMode,
+    MapState,
+} from '#types';
 import mapTheme from './mapTheme';
 
 interface Props {
     mode: GameMode;
     onRegionClick: (p: mapboxgl.MapboxGeoJSONFeature['properties']) => void;
+    clickedMapState?: MapState;
+    hintMapState?: MapState;
 }
 
-const noOp = () => { console.warn('entering/leaving'); };
+// eslint-disable-next-line @typescript-eslint/no-empty-function
+const noOp = () => {};
 
 const mapSources = {
     nepal: {
@@ -37,6 +44,8 @@ function RegionMap(props: Props) {
     const {
         mode,
         onRegionClick,
+        clickedMapState,
+        hintMapState,
     } = props;
 
     const handleProvinceClick = React.useCallback((e: mapboxgl.MapboxGeoJSONFeature) => {
@@ -58,6 +67,22 @@ function RegionMap(props: Props) {
 
         return undefined;
     }, [onRegionClick]);
+
+    const clickedAttributes = React.useMemo(() => {
+        if (!clickedMapState) {
+            return [];
+        }
+
+        return [clickedMapState];
+    }, [clickedMapState]);
+
+    const hintAttributes = React.useMemo(() => {
+        if (!hintMapState) {
+            return [];
+        }
+
+        return [hintMapState];
+    }, [hintMapState]);
 
     return (
         <>
@@ -89,6 +114,16 @@ function RegionMap(props: Props) {
                                 paint: mapTheme.province.outlinePaint,
                             }}
                         />
+                        <State
+                            attributes={clickedAttributes}
+                            attributeKey="clicked"
+                            sourceLayer={mapSources.nepal.layers.province}
+                        />
+                        <State
+                            attributes={hintAttributes}
+                            attributeKey="hint"
+                            sourceLayer={mapSources.nepal.layers.province}
+                        />
                     </>
                 )}
                 { (mode === 'district' || mode === 'districtFixed') && (
@@ -111,6 +146,16 @@ function RegionMap(props: Props) {
                                 type: 'line',
                                 paint: mapTheme.district.outlinePaint,
                             }}
+                        />
+                        <State
+                            attributes={clickedAttributes}
+                            attributeKey="clicked"
+                            sourceLayer={mapSources.nepal.layers.district}
+                        />
+                        <State
+                            attributes={hintAttributes}
+                            attributeKey="hint"
+                            sourceLayer={mapSources.nepal.layers.district}
                         />
                     </>
                 )}

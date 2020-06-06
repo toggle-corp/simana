@@ -6,8 +6,8 @@
     --spacing-super-large: 24px;
 
     --color-foreground: #fff;
-    --color-background: #fffff0;
-    --color-background-haze: rgba(255, 255, 255, .7);
+    --color-background: #f6f6f0;
+    --color-background-haze: rgba(255, 255, 240, .7);
 
     --color-accent: #18bc9c;
     --color-text-on-accent: #fff;

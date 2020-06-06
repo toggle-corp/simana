@@ -160,6 +160,8 @@ export function useGameplay(
         const newChallenges = [...challenges];
         newChallenges.splice(round, 1, updatedChallenge);
         setChallenges(newChallenges);
+
+        return updatedChallenge.result;
     }, [challenges, round, setChallenges]);
 
     if (gameMode && gameState === 'play') {

@@ -1,3 +1,5 @@
+import { listToMap } from '@togglecorp/fujs';
+
 export const appName = 'Nepal Geo Explorer';
 
 export const gameModes = {
@@ -80,6 +82,8 @@ export const provinces = [
         title_ne: 'कर्णाली',
     },
 ];
+
+export const provinceIdByCode = listToMap(provinces, (d) => d.code, (d) => d.id);
 
 export const districts = [
     {
@@ -622,3 +626,5 @@ export const districts = [
         province: 5,
     },
 ];
+
+export const districtIdByCode = listToMap(districts, (d) => d.code, (d) => d.id);

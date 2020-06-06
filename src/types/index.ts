@@ -21,3 +21,9 @@ export interface Message {
     timestamp: number;
     type?: 'good' | 'bad';
 }
+
+
+export interface MapState {
+    id: number;
+    value: string;
+}

@@ -7,14 +7,21 @@ import Map from '#re-map';
 import MapContainer from '#re-map/MapContainer';
 import MapBounds from '#re-map/MapBounds';
 
+// import backgroundImage from '#assets/background.png';
+
 import {
     BBox,
     GameMode,
     GameState,
     Message,
+    MapState,
 } from '#types';
 import { useGameplay } from '#hooks';
 import { getRandomPositiveMessage } from '#utils/common';
+import {
+    districtIdByCode,
+    provinceIdByCode,
+} from '#utils/constants';
 import RoundButton from '#components/RoundButton';
 
 import UserInformationModal from './UserInformationModal';
@@ -42,17 +49,23 @@ const defaultBounds: BBox = [
     30.44702867091792,
 ];
 
+const HINT_HIGHLIGHT_TIMEOUT = 2000;
+const CLICK_HIGHLIGHT_TIMEOUT = 1000;
 
 function Home(props: Props): React.ReactElement {
     const { className } = props;
     const [gameId, setGameId] = React.useState(new Date().getTime());
+    const [clickedMapState, setClickedMapState] = React.useState<MapState | undefined>();
+    const [hintMapState, setHintMapState] = React.useState<MapState | undefined>();
 
     const [message, setMessage] = React.useState<Message | undefined>(undefined);
     const [gameState, setGameState] = React.useState<GameState>('user-info');
 
     const [name, setName] = React.useState('fhx');
-    const [mode, setMode] = React.useState<GameMode | undefined>(undefined);
-    const answerRef = React.useRef<string | undefined>(undefined);
+    const [mode, setMode] = React.useState<GameMode | undefined>();
+    const answerRef = React.useRef<string | undefined>();
+    const clickedTimeoutRef = React.useRef<number | undefined>();
+    const hintTimeoutRef = React.useRef<number | undefined>();
 
     const handleGameplayEnd = React.useCallback(() => {
         setGameState('finished');
@@ -115,22 +128,55 @@ function Home(props: Props): React.ReactElement {
     }, [setGameState, setGameId]);
 
     const handleRegionClick = React.useCallback((properties) => {
-        addAttempt(properties.code);
+        const gameModeToCodeMap: {
+            [key in GameMode]: { [key: string]: number };
+        } = {
+            province: provinceIdByCode,
+            provinceFixed: provinceIdByCode,
+            district: districtIdByCode,
+            districtFixed: districtIdByCode,
+        };
 
-        if (properties.code === answerRef.current) {
-            setMessage({
-                text: getRandomPositiveMessage(),
-                timestamp: new Date().getTime(),
-                type: 'good',
-            });
-        } else {
-            setMessage({
-                text: `Oops! you clicked on ${properties.title}`,
-                timestamp: new Date().getTime(),
-                type: 'bad',
-            });
+        if (gameState === 'play' && mode) {
+            if (addAttempt(properties.code) === 'fail' && answerRef.current) {
+                setHintMapState({
+                    id: gameModeToCodeMap[mode][answerRef.current],
+                    value: 'neutral',
+                });
+                window.clearTimeout(hintTimeoutRef.current);
+                hintTimeoutRef.current = window.setTimeout(() => {
+                    setHintMapState(undefined);
+                }, HINT_HIGHLIGHT_TIMEOUT);
+            }
+
+            if (properties.code === answerRef.current) {
+                setMessage({
+                    text: getRandomPositiveMessage(),
+                    timestamp: new Date().getTime(),
+                    type: 'good',
+                });
+                setClickedMapState({
+                    id: gameModeToCodeMap[mode][properties.code],
+                    value: 'good',
+                });
+            } else {
+                setMessage({
+                    text: `Oops! you clicked on ${properties.title}`,
+                    timestamp: new Date().getTime(),
+                    type: 'bad',
+                });
+                setClickedMapState({
+                    id: gameModeToCodeMap[mode][properties.code],
+                    value: 'bad',
+                });
+            }
+
+            window.clearTimeout(clickedTimeoutRef.current);
+            clickedTimeoutRef.current = window.setTimeout(() => {
+                setClickedMapState(undefined);
+            }, CLICK_HIGHLIGHT_TIMEOUT);
         }
-    }, [addAttempt, setMessage, answerRef]);
+    }, [gameState, mode, addAttempt, setMessage, answerRef, setClickedMapState, setHintMapState]);
 
     return (
         <div className={_cs(className, styles.home)}>
@@ -154,6 +200,8 @@ function Home(props: Props): React.ReactElement {
                     <RegionMap
                         mode={mode}
                         onRegionClick={handleRegionClick}
+                        clickedMapState={clickedMapState}
+                        hintMapState={hintMapState}
                     />
                 )}
             </Map>
