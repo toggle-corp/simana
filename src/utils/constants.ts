@@ -20,6 +20,8 @@ export const TOTAL_DISTRICTS = 77;
 export const PROVINCE_MAX_ROUNDS = 5;
 export const DISTRICTS_MAX_ROUNDS = 10;
 
+export const SCORE_UNIT = 500;
+
 export const positiveMessageList = [
     'Amazing!',
     'Awesome!',

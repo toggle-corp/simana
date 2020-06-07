@@ -1,4 +1,8 @@
-import { GameMode } from '#types';
+import {
+    GameMode,
+    Challenge,
+} from '#types';
+
 import {
     ONE_MINUTE,
     ROUND_DURATION,
@@ -7,6 +11,8 @@ import {
     PROVINCE_MAX_ROUNDS,
     DISTRICTS_MAX_ROUNDS,
     positiveMessageList,
+    MAX_ATTEMPTS,
+    SCORE_UNIT,
 } from '#utils/constants';
 
 const modeToMaxRoundMap: {
@@ -48,4 +54,14 @@ export function shuffle(array: any[]) {
 export function getRandomPositiveMessage() {
     const randomIndex = Math.floor(Math.random() * positiveMessageList.length);
     return positiveMessageList[randomIndex];
+}
+
+export function calculateScore(challengeList: Challenge[]) {
+    return challengeList.reduce((acc, val) => {
+        if (val.result === 'pass') {
+            return acc + (MAX_ATTEMPTS - val.attempts.length + 1) * SCORE_UNIT;
+        }
+
+        return acc;
+    }, 0);
 }

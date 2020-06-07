@@ -4,6 +4,7 @@ import Haze from '#components/Haze';
 import Button from '#components/Button';
 
 import { Challenge } from '#types';
+import { calculateScore } from '#utils/common';
 
 import styles from './styles.css';
 
@@ -23,13 +24,7 @@ function AfterGameModal(props: Props): React.ReactElement {
     } = props;
 
     const score = React.useMemo(() => (
-        challenges.reduce((acc, val) => {
-            if (val.result === 'pass') {
-                return acc + 500;
-            }
-
-            return acc;
-        }, 0)
+        calculateScore(challenges)
     ), [challenges]);
 
     return (

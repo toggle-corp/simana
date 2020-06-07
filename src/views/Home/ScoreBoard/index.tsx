@@ -7,7 +7,10 @@ import {
 } from '#types';
 
 import { MAX_ATTEMPTS } from '#utils/constants';
-import { getMaxRounds } from '#utils/common';
+import {
+    getMaxRounds,
+    calculateScore,
+} from '#utils/common';
 
 import styles from './styles.css';
 
@@ -66,13 +69,7 @@ function ScoreBoard(props: Props) {
     } = props;
 
     const score = React.useMemo(() => (
-        challenges.reduce((acc, val) => {
-            if (val.result === 'pass') {
-                return acc + 500;
-            }
-
-            return acc;
-        }, 0)
+        calculateScore(challenges)
     ), [challenges]);
 
     const currentChallange = challenges[round];
