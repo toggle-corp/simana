@@ -110,7 +110,7 @@ export function useGameplay(
     gameId: string | number,
     gameState: GameState,
     gameMode: GameMode | undefined,
-    onGameplayEnd: () => void,
+    onGameplayEnd: (elapsed: number) => void,
     onRoundEnd: (round: number) => void,
 ) {
     const {
@@ -194,7 +194,7 @@ export function useGameplay(
         const gameEnded = currentRound >= maxRounds || elapsed >= getMaxDuration(gameMode);
         if (gameEnded) {
             setRound(0);
-            onGameplayEnd();
+            onGameplayEnd(elapsed);
         } else if (currentRound !== round) {
             setRound(currentRound);
         }

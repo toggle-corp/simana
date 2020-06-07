@@ -1,10 +1,18 @@
 import React from 'react';
+import { addSeparator } from '@togglecorp/fujs';
 
 import Haze from '#components/Haze';
 import Button from '#components/Button';
 
-import { Challenge } from '#types';
+import {
+    Challenge,
+    GameMode,
+} from '#types';
 import { calculateScore } from '#utils/common';
+import { gameModes } from '#utils/constants';
+
+import TextOutput from '#components/TextOutput';
+import ElapsedOutput from '#components/ElapsedOutput';
 
 import styles from './styles.css';
 
@@ -13,6 +21,9 @@ interface Props {
     onNicknameClick: () => void;
     onGameModeClick: () => void;
     challenges: Challenge[];
+    mode: GameMode,
+    elapsed: number,
+    username: string;
 }
 
 function AfterGameModal(props: Props): React.ReactElement {
@@ -21,6 +32,9 @@ function AfterGameModal(props: Props): React.ReactElement {
         challenges,
         onGameModeClick,
         onNicknameClick,
+        mode,
+        elapsed,
+        username,
     } = props;
 
     const score = React.useMemo(() => (
@@ -38,23 +52,37 @@ function AfterGameModal(props: Props): React.ReactElement {
                 <div className={styles.content}>
                     <div className={styles.score}>
                         <div className={styles.label}>
-                            Your score
+                            {`${username} scored:`}
                         </div>
                         <div className={styles.value}>
-                            { score }
+                            { addSeparator(score) }
                         </div>
                     </div>
-                    <div className={styles.actions}>
-                        <Button onClick={onNicknameClick}>
-                            Nickname
-                        </Button>
-                        <Button onClick={onGameModeClick}>
-                            Game mode
-                        </Button>
-                        <Button onClick={onPlayAgainClick}>
-                            Play again
-                        </Button>
-                    </div>
+                    <TextOutput
+                        className={styles.mode}
+                        label="Mode:"
+                        value={gameModes[mode]}
+                    />
+                    <TextOutput
+                        className={styles.time}
+                        label="Time:"
+                        value={(
+                            <ElapsedOutput
+                                value={elapsed}
+                            />
+                        )}
+                    />
+                </div>
+                <div className={styles.actions}>
+                    <Button onClick={onNicknameClick}>
+                        Nickname
+                    </Button>
+                    <Button onClick={onGameModeClick}>
+                        Game mode
+                    </Button>
+                    <Button onClick={onPlayAgainClick}>
+                        Play again
+                    </Button>
                 </div>
             </div>
         </Haze>

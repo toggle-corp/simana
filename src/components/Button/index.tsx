@@ -7,7 +7,7 @@ interface Props<T> {
     className?: string;
     name?: T,
     children: React.ReactNode;
-    onClick: (name?: T) => void;
+    onClick?: (name?: T) => void;
     type?: 'button' | 'submit';
 }
 

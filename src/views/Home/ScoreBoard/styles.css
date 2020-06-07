@@ -8,7 +8,7 @@
         flex-direction: column;
         justify-content: center;
         padding: var(--spacing-medium);
-        width: 90px;
+        width: 108px;
         
         .label {
             padding: var(--spacing-small);

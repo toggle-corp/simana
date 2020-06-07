@@ -5,8 +5,10 @@
     box-shadow: 0 3px 10px -3px rgba(0, 0, 0, .3);
     background-color: var(--color-foreground);
     padding: var(--spacing-large);
-    width: 600px;
-    height: 360px;
+    width: calc(100% - 2 * var(--spacing-medium));
+    max-width: 740px;
+    height: calc(100% - 2 * var(--spacing-medium));
+    max-height: 460px;
     overflow: auto;
 
     >.header {
@@ -32,21 +34,23 @@
             flex-basis: 0;
             flex-direction: column;
             flex-grow: 1;
-            padding: calc(var(--spacing-medium) - var(--spacing-small));
+            padding: calc(var(--spacing-large) - var(--spacing-medium));
+            min-width: 160px;
 
             .header {
                 flex-shrink: 0;
 
                 .heading {
-                    padding: var(--spacing-small);
+                    padding: var(--spacing-medium);
                     text-align: center;
                     color: rgba(0, 100, 0, .5);
+                    font-size: var(--font-size-small);
                 }
             }
 
             .content {
                 flex-grow: 1;
-                padding: var(--spacing-small);
+                padding: var(--spacing-medium);
 
                 .icon {
                     color: rgba(0, 0, 0, .3);

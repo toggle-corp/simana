@@ -94,6 +94,7 @@ function Home(props: Props): React.ReactElement {
     const [clickedMapState, setClickedMapState] = React.useState<MapState | undefined>();
     const [hintMapState, setHintMapState] = React.useState<MapState | undefined>();
 
+    const [gameDuration, setGameDuration] = React.useState(0);
     const [message, setMessage] = React.useState<Message | undefined>(undefined);
     const [gameState, setGameState] = React.useState<GameState>('user-info');
     const [mapSourceLoaded, setMapSourceLoaded] = React.useState<boolean>(false);
@@ -104,10 +105,11 @@ function Home(props: Props): React.ReactElement {
     const clickedTimeoutRef = React.useRef<number | undefined>();
     const hintTimeoutRef = React.useRef<number | undefined>();
 
-    const handleGameplayEnd = React.useCallback(() => {
+    const handleGameplayEnd = React.useCallback((totalElapsed) => {
         setGameState('finished');
         console.info('game finished...');
-    }, [setGameState]);
+        setGameDuration(totalElapsed);
+    }, [setGameState, setGameDuration]);
 
     const showCorrectAnswer = React.useCallback((gameMode: GameMode, regionCode: string) => {
         setHintMapState({
@@ -149,23 +151,33 @@ function Home(props: Props): React.ReactElement {
         return () => { window.clearTimeout(timeout); };
     }, [gameState, setGameState, mapSourceLoaded]);
 
+    const startNewGame = React.useCallback((shouldInvalidateMap?: boolean, gameMode?: GameMode) => {
+        const newGameId = new Date().getTime();
+        setGameDuration(0);
+        setGameId(newGameId);
+        setGameState('initialize');
+
+        if (shouldInvalidateMap) {
+            setMapSourceLoaded(false);
+        }
+
+        if (gameMode) {
+            setMode(gameMode);
+        }
+    }, [setMode, setGameId, setMapSourceLoaded, setGameDuration]);
+
     const handleUserInfoStartClick = React.useCallback((userName) => {
         setName(userName);
         setGameState('mode-selection');
     }, [setGameState]);
 
     const handleGameModeSelect = React.useCallback((gameMode) => {
-        const newGameId = new Date().getTime();
-        setMode(gameMode);
-        setGameId(newGameId);
-        setMapSourceLoaded(false);
-        setGameState('initialize');
-    }, [setMode, setGameId, setMapSourceLoaded]);
+        startNewGame(true, gameMode);
+    }, [startNewGame]);
 
     const handlePlayAgainButtonClick = React.useCallback(() => {
-        setGameState('initialize');
-        setGameId(new Date().getTime());
-    }, [setGameState, setGameId]);
+        startNewGame();
+    }, [startNewGame]);
     const handleNicknameButtonClick = React.useCallback(() => {
         setGameState('user-info');
     }, [setGameState]);
@@ -175,12 +187,12 @@ function Home(props: Props): React.ReactElement {
 
     const handleSurrenderButtonClick = React.useCallback(() => {
         setGameState('finished');
-    }, [setGameState]);
+        setGameDuration(elapsed);
+    }, [setGameState, setGameDuration, elapsed]);
 
     const handleRestartRoundButtonClick = React.useCallback(() => {
-        setGameState('initialize');
-        setGameId(new Date().getTime());
-    }, [setGameState, setGameId]);
+        startNewGame();
+    }, [startNewGame]);
 
     const handleRegionClick = React.useCallback((properties) => {
         if (gameState === 'play' && mode) {
@@ -224,6 +236,7 @@ function Home(props: Props): React.ReactElement {
     return (
         <div className={_cs(className, styles.home)}>
             <Map
+                key={gameId}
                 mapStyle={blankStyle}
                 mapOptions={{
                     logoPosition: 'bottom-left',
@@ -239,7 +252,7 @@ function Home(props: Props): React.ReactElement {
                 />
                 <MapBounds
                     bounds={defaultBounds}
-                    padding={200}
+                    padding={100}
                 />
                 <MapContainer className={styles.mapContainer} />
                 { mode && (
@@ -257,8 +270,8 @@ function Home(props: Props): React.ReactElement {
                         className={styles.stats}
                         mode={mode}
                         username={name}
-                        lapElapsed={lapElapsed}
-                        elapsed={elapsed}
+                        lapElapsed={gameState === 'initialize' ? 0 : lapElapsed}
+                        elapsed={gameState === 'initialize' ? 0 : elapsed}
                     />
                     <ScoreBoard
                         mode={mode}
@@ -308,12 +321,15 @@ function Home(props: Props): React.ReactElement {
                     onModeSelect={handleGameModeSelect}
                 />
             )}
-            { gameState === 'finished' && (
+            { gameState === 'finished' && mode && (
                 <AfterGameModal
+                    mode={mode}
+                    elapsed={gameDuration}
                     challenges={challenges}
                     onPlayAgainClick={handlePlayAgainButtonClick}
                     onGameModeClick={handleGameModeButtonClick}
                     onNicknameClick={handleNicknameButtonClick}
+                    username={name}
                 />
             )}
             { gameState === 'play' && (

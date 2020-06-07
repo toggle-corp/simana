@@ -1,5 +1,8 @@
 import React from 'react';
-import { _cs } from '@togglecorp/fujs';
+import {
+    _cs,
+    addSeparator,
+} from '@togglecorp/fujs';
 
 import {
     Challenge,
@@ -15,7 +18,7 @@ import {
 import styles from './styles.css';
 
 interface TextOutputProps {
-    value: number;
+    value: number | string;
     label: React.ReactNode;
     limit?: number;
 }
@@ -78,7 +81,7 @@ function ScoreBoard(props: Props) {
         <div className={_cs(className, styles.scoreBoard)}>
             <TextOutput
                 label="Score"
-                value={score}
+                value={addSeparator(score) || ''}
             />
             <TextOutput
                 label="Round"

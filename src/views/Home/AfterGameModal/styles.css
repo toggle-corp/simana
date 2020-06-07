@@ -30,9 +30,7 @@
             display: flex;
             align-items: center;
             flex-direction: column;
-            flex-grow: 1;
             justify-content: center;
-
 
             .label {
                 padding: var(--spacing-medium);
@@ -48,12 +46,18 @@
             }
         }
 
-        .actions {
-            display: flex;
-            align-self: stretch;
-            flex-shrink: 0;
-            justify-content: space-around;
-            padding: var(--spacing-medium);
+        .mode {
         }
+
+        .time {
+        }
+    }
+
+    .actions {
+        display: flex;
+        align-self: stretch;
+        flex-shrink: 0;
+        justify-content: space-around;
+        padding: var(--spacing-medium);
     }
 }

@@ -38,9 +38,9 @@ function GameModeSelectionModal(props: Props): React.ReactElement {
                             className={styles.gameModeCard}
                         >
                             <header className={styles.header}>
-                                <h3 className={styles.heading}>
+                                <h4 className={styles.heading}>
                                     { gameModes[mk as GameMode] }
-                                </h3>
+                                </h4>
                             </header>
                             <div className={styles.content}>
                                 <GrMapLocation className={styles.icon} />
