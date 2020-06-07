@@ -1,5 +1,5 @@
 {
-    "name": "nepal-geo-explorer",
+    "name": "simana",
     "version": "1.0.0",
     "description": "Quiz game to explore places in Nepal",
     "main": "src/index.tsx",
@@ -19,7 +19,8 @@
         "typecheck": "tsc",
         "lint": "eslint ./src --rule 'import/no-unresolved: 0'",
         "test:coverage": "jest --coverage",
-        "deploy:dev": "test -d build && cp -f build/index.html build/200.hml && surge --domain nepal-geo-explorer.surge.sh build/"
+        "deploy:dev": "test -d build && cp -f build/index.html build/200.hml && surge --domain simana.surge.sh build/",
+        "deploy:prod": "test -d build && cp -f build/index.html build/200.hml && surge --domain simana.io build/"
     },
     "jest": {
         "setupFiles": [

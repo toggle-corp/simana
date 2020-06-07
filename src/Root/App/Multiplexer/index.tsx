@@ -59,7 +59,6 @@ const Multiplexer = (props: Props) => {
                                 path={path}
                                 render={() => (
                                     <>
-                                        <Title value={title} />
                                         { !hideNavbar && (
                                             <Navbar className={styles.navbar} />
                                         )}

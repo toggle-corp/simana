@@ -5,7 +5,7 @@ import Root from './Root';
 
 console.info('React version', React.version);
 
-const rootElement = document.getElementById('nepal-geo-explorer-root');
+const rootElement = document.getElementById('simana-root');
 if (rootElement) {
     ReactDOM.unstable_createRoot(rootElement).render(<Root />);
 } else {

@@ -1,6 +1,8 @@
 import React from 'react';
 import { _cs } from '@togglecorp/fujs';
 
+import { appName } from '#utils/constants';
+
 import styles from './styles.css';
 
 interface Props {
@@ -13,7 +15,7 @@ const Navbar = (props: Props) => {
     return (
         <nav className={_cs(className, styles.navbar)}>
             <div className={styles.appBrand}>
-                Nepal Geo Explorer
+                { appName }
             </div>
         </nav>
     );

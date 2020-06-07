@@ -79,6 +79,15 @@ function MapLoadMonitor(p: {
     return null;
 }
 
+const gameModeToCodeMap: {
+    [key in GameMode]: { [key: string]: number };
+} = {
+    province: provinceIdByCode,
+    provinceFixed: provinceIdByCode,
+    district: districtIdByCode,
+    districtFixed: districtIdByCode,
+};
+
 function Home(props: Props): React.ReactElement {
     const { className } = props;
     const [gameId, setGameId] = React.useState(new Date().getTime());
@@ -100,13 +109,30 @@ function Home(props: Props): React.ReactElement {
         console.info('game finished...');
     }, [setGameState]);
 
+    const showCorrectAnswer = React.useCallback((gameMode: GameMode, regionCode: string) => {
+        setHintMapState({
+            id: gameModeToCodeMap[gameMode][regionCode],
+            value: 'neutral',
+        });
+        window.clearTimeout(hintTimeoutRef.current);
+        hintTimeoutRef.current = window.setTimeout(() => {
+            setHintMapState(undefined);
+        }, HINT_HIGHLIGHT_TIMEOUT);
+    }, [setHintMapState]);
+
+    const handleRoundEnd = React.useCallback(() => {
+        if (gameState === 'play' && mode && answerRef.current) {
+            showCorrectAnswer(mode, answerRef.current);
+        }
+    }, [showCorrectAnswer, answerRef, mode, gameState]);
+
     const {
         round,
         elapsed,
         lapElapsed,
         addAttempt,
         challenges,
-    } = useGameplay(gameId, gameState, mode, handleGameplayEnd);
+    } = useGameplay(gameId, gameState, mode, handleGameplayEnd, handleRoundEnd);
 
     React.useEffect(() => {
         const challange = challenges[round];
@@ -157,25 +183,9 @@ function Home(props: Props): React.ReactElement {
     }, [setGameState, setGameId]);
 
     const handleRegionClick = React.useCallback((properties) => {
-        const gameModeToCodeMap: {
-            [key in GameMode]: { [key: string]: number };
-        } = {
-            province: provinceIdByCode,
-            provinceFixed: provinceIdByCode,
-            district: districtIdByCode,
-            districtFixed: districtIdByCode,
-        };
-
         if (gameState === 'play' && mode) {
             if (addAttempt(properties.code) === 'fail' && answerRef.current) {
-                setHintMapState({
-                    id: gameModeToCodeMap[mode][answerRef.current],
-                    value: 'neutral',
-                });
-                window.clearTimeout(hintTimeoutRef.current);
-                hintTimeoutRef.current = window.setTimeout(() => {
-                    setHintMapState(undefined);
-                }, HINT_HIGHLIGHT_TIMEOUT);
+                showCorrectAnswer(mode, answerRef.current);
             }
 
             if (properties.code === answerRef.current) {
@@ -205,7 +215,7 @@ function Home(props: Props): React.ReactElement {
                 setClickedMapState(undefined);
             }, CLICK_HIGHLIGHT_TIMEOUT);
         }
-    }, [gameState, mode, addAttempt, setMessage, answerRef, setClickedMapState, setHintMapState]);
+    }, [gameState, mode, addAttempt, setMessage, answerRef, setClickedMapState, showCorrectAnswer]);
 
     const handleMapSourceLoad = React.useCallback(() => {
         setMapSourceLoaded(true);

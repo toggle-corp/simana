@@ -1,12 +1,12 @@
 import { listToMap } from '@togglecorp/fujs';
 
-export const appName = 'Nepal Geo Explorer';
+export const appName = 'Simana';
 
 export const gameModes = {
-    province: 'Province mode',
-    district: 'District mode',
-    provinceFixed: 'Province fixed mode',
-    districtFixed: 'District fixed mode',
+    province: 'Province all',
+    district: 'District all',
+    provinceFixed: 'Province quick',
+    districtFixed: 'District quick',
 };
 
 export const ONE_SECOND = 1000;

@@ -34,6 +34,7 @@ const routeSettings: SomeRoute[] = [
         name: 'fourHundredThree',
         title: '403',
         load: lazy(() => import('../../../views/FourHundredThree')),
+        hideNavbar: true,
     },
     {
         path: undefined,
@@ -41,6 +42,7 @@ const routeSettings: SomeRoute[] = [
         title: '404',
         load: lazy(() => import('../../../views/FourHundredFour')),
         default: false,
+        hideNavbar: true,
     },
 ];
 

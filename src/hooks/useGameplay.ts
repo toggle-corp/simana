@@ -111,6 +111,7 @@ export function useGameplay(
     gameState: GameState,
     gameMode: GameMode | undefined,
     onGameplayEnd: () => void,
+    onRoundEnd: (round: number) => void,
 ) {
     const {
         tick,
@@ -179,6 +180,7 @@ export function useGameplay(
                 if (lapElapsed >= ROUND_DURATION) {
                     currentRound += 1;
                     addLap();
+                    onRoundEnd(currentRound);
                 }
                 break;
 

@@ -190,7 +190,7 @@ module.exports = (env) => {
             new HtmlWebpackPlugin({
                 template: appIndexHtml,
                 filename: './index.html',
-                title: 'Nepal Geo Explorer',
+                title: 'Simana',
                 favicon: path.resolve(appFavicon),
                 chunksSortMode: 'none',
             }),
@@ -215,8 +215,8 @@ module.exports = (env) => {
                 ],
             }),
             new WebpackPwaManifest({
-                name: 'nepal-geo-explorer',
-                short_name: 'Nepal Geo Explorer',
+                name: 'simana',
+                short_name: 'Simana',
                 description: 'Quiz game to explore places in Nepal',
                 background_color: '#ffffff',
                 orientation: 'portrait',
