@@ -6,6 +6,7 @@ import { GrPowerReset } from 'react-icons/gr';
 import Map from '#re-map';
 import MapContainer from '#re-map/MapContainer';
 import MapBounds from '#re-map/MapBounds';
+import { MapChildContext } from '#re-map/context';
 
 // import backgroundImage from '#assets/background.png';
 
@@ -52,6 +53,32 @@ const defaultBounds: BBox = [
 const HINT_HIGHLIGHT_TIMEOUT = 2000;
 const CLICK_HIGHLIGHT_TIMEOUT = 1000;
 
+function MapLoadMonitor(p: {
+    onSourceLoad: () => void;
+}) {
+    const { onSourceLoad } = p;
+    const { map } = React.useContext(MapChildContext);
+    const handleMapLoad = React.useCallback((e) => {
+        if (e.isSourceLoaded && e.tile && onSourceLoad) {
+            onSourceLoad();
+        }
+    }, [onSourceLoad]);
+
+    React.useEffect(() => {
+        if (map) {
+            map.on('data', handleMapLoad);
+        }
+
+        return () => {
+            if (map) {
+                map.off('data', handleMapLoad);
+            }
+        };
+    }, [map, handleMapLoad]);
+
+    return null;
+}
+
 function Home(props: Props): React.ReactElement {
     const { className } = props;
     const [gameId, setGameId] = React.useState(new Date().getTime());
@@ -60,6 +87,7 @@ function Home(props: Props): React.ReactElement {
 
     const [message, setMessage] = React.useState<Message | undefined>(undefined);
     const [gameState, setGameState] = React.useState<GameState>('user-info');
+    const [mapSourceLoaded, setMapSourceLoaded] = React.useState<boolean>(false);
 
     const [name, setName] = React.useState('fhx');
     const [mode, setMode] = React.useState<GameMode | undefined>();
@@ -87,13 +115,13 @@ function Home(props: Props): React.ReactElement {
 
     React.useEffect(() => {
         let timeout: number | undefined;
-        if (gameState === 'initialize') {
+        if (gameState === 'initialize' && mapSourceLoaded) {
             const delay = 3000;
             console.info('game starts in', delay / 1000);
             timeout = window.setTimeout(() => { setGameState('play'); }, delay);
         }
         return () => { window.clearTimeout(timeout); };
-    }, [gameState, setGameState]);
+    }, [gameState, setGameState, mapSourceLoaded]);
 
     const handleUserInfoStartClick = React.useCallback((userName) => {
         setName(userName);
@@ -104,8 +132,9 @@ function Home(props: Props): React.ReactElement {
         const newGameId = new Date().getTime();
         setMode(gameMode);
         setGameId(newGameId);
+        setMapSourceLoaded(false);
         setGameState('initialize');
-    }, [setMode, setGameId]);
+    }, [setMode, setGameId, setMapSourceLoaded]);
 
     const handlePlayAgainButtonClick = React.useCallback(() => {
         setGameState('initialize');
@@ -178,6 +207,10 @@ function Home(props: Props): React.ReactElement {
         }
     }, [gameState, mode, addAttempt, setMessage, answerRef, setClickedMapState, setHintMapState]);
 
+    const handleMapSourceLoad = React.useCallback(() => {
+        setMapSourceLoaded(true);
+    }, [setMapSourceLoaded]);
+
     return (
         <div className={_cs(className, styles.home)}>
             <Map
@@ -191,6 +224,9 @@ function Home(props: Props): React.ReactElement {
                 scaleControlShown={false}
                 navControlShown={false}
             >
+                <MapLoadMonitor
+                    onSourceLoad={handleMapSourceLoad}
+                />
                 <MapBounds
                     bounds={defaultBounds}
                     padding={200}
@@ -234,7 +270,12 @@ function Home(props: Props): React.ReactElement {
                     mode={mode}
                 />
             )}
-            { gameState === 'initialize' && (
+            { gameState === 'initialize' && !mapSourceLoaded && (
+                <div className={styles.mapLoadingMessage}>
+                    Loading map...
+                </div>
+            )}
+            { gameState === 'initialize' && mapSourceLoaded && (
                 <div className={styles.initializeMessage}>
                     <div className={styles.ready}>
                         Ready!
