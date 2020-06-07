@@ -25,3 +25,32 @@
         justify-content: center;
     }
 }
+
+.warning {
+    display: none;
+}
+
+@media screen and (orientation:portrait) {
+    .multiplexer {
+        display: none;
+    }
+
+    .warning {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        text-align: center;
+        height: 100vh;
+        width: 100vw;
+        z-index: 111;
+        padding: var(--spacing-large);
+        background-color: var(--color-background);
+        background-image: url('../../../assets/background.png');
+        background-position: center center;
+        background-size: cover;
+        background-blend-mode: lighten;
+    }
+}
+
