@@ -7,6 +7,8 @@
     padding: var(--spacing-large);
     width: 500px;
     height: 400px;
+    max-width: 60vw;
+    max-height: 80vh;
 
     .header {
         flex-shrink: 0;
@@ -38,6 +40,22 @@
 
         .actions {
             padding: var(--spacing-medium);
+        }
+    }
+
+    @media screen and (max-width: 1080px) {
+        .header {
+            padding: var(--spacing-small);
+        }
+
+        .content {
+            .avatar {
+                padding: var(--spacing-small);
+
+                .icon {
+                    font-size: 40px;
+                }
+            }
         }
     }
 }

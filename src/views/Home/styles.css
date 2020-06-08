@@ -105,6 +105,38 @@
         transform: translate(-50%, -50%);
         z-index: 1;
     }
+
+    @media screen and (max-width: 1080px) {
+        .initialize-message {
+            font-size: var(--font-size-large);
+            top: 15%;
+        }
+
+        .message {
+            top: 15%;
+        }
+
+        .challenge {
+            bottom: 8%;
+            font-size: var(--font-size-large);
+        }
+    }
+
+    @media screen and (max-width: 900px) {
+        .initialize-message {
+            font-size: var(--font-size-medium);
+            top: 15%;
+        }
+
+        .message {
+            top: 15%;
+        }
+
+        .challenge {
+            bottom: 5%;
+            font-size: var(--font-size-medium);
+        }
+    }
 }
 
 @keyframes fade-in {

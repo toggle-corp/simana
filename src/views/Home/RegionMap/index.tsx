@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useMemo } from 'react';
+import { unique } from '@togglecorp/fujs';
+
 import MapSource from '#re-map/MapSource';
 import State from '#re-map/MapSource/MapState';
 import MapLayer from '#re-map/MapSource/MapLayer';
+
 
 import {
     GameMode,
@@ -84,6 +87,20 @@ function RegionMap(props: Props) {
         return [hintMapState];
     }, [hintMapState]);
 
+    const filter: mapboxgl.Layer['filter'] | undefined = useMemo(
+        () => {
+            const ids: number[] = [-1];
+            if (hintMapState) {
+                ids.push(hintMapState.id);
+            }
+            if (clickedMapState) {
+                ids.push(clickedMapState.id);
+            }
+            return ['match', ['id'], unique(ids), true, false];
+        },
+        [clickedMapState, hintMapState],
+    );
+
     return (
         <>
             <MapSource
@@ -93,18 +110,17 @@ function RegionMap(props: Props) {
                     url: mapSources.nepal.url,
                 }}
             >
-                { (mode === 'province' || mode === 'provinceFixed') && (
+                {(mode === 'province' || mode === 'provinceFixed') && (
                     <>
                         <MapLayer
                             layerKey="province-fill"
                             onClick={handleProvinceClick}
+                            onMouseEnter={noOp}
                             layerOptions={{
                                 'source-layer': mapSources.nepal.layers.province,
                                 type: 'fill',
                                 paint: mapTheme.province.fillPaint,
                             }}
-                            onMouseEnter={noOp}
-                            onMouseLeave={noOp}
                         />
                         <MapLayer
                             layerKey="province-outline"
@@ -126,18 +142,17 @@ function RegionMap(props: Props) {
                         />
                     </>
                 )}
-                { (mode === 'district' || mode === 'districtFixed') && (
+                {(mode === 'district' || mode === 'districtFixed') && (
                     <>
                         <MapLayer
                             layerKey="district-fill"
                             onClick={handleDistrictClick}
+                            onMouseEnter={noOp}
                             layerOptions={{
                                 'source-layer': mapSources.nepal.layers.district,
                                 type: 'fill',
                                 paint: mapTheme.district.fillPaint,
                             }}
-                            onMouseEnter={noOp}
-                            onMouseLeave={noOp}
                         />
                         <MapLayer
                             layerKey="district-outline"
@@ -158,6 +173,38 @@ function RegionMap(props: Props) {
                             sourceLayer={mapSources.nepal.layers.district}
                         />
                     </>
+                )}
+            </MapSource>
+            <MapSource
+                sourceKey="countryCentroids"
+                sourceOptions={{
+                    type: 'vector',
+                    url: mapSources.nepalCentroid.url,
+                }}
+            >
+                {(mode === 'province' || mode === 'provinceFixed') && (
+                    <MapLayer
+                        layerKey="province-label"
+                        layerOptions={{
+                            'source-layer': mapSources.nepalCentroid.layers.province,
+                            type: 'symbol',
+                            paint: mapTheme.province.textPaint,
+                            layout: mapTheme.province.textLayout,
+                            filter,
+                        }}
+                    />
+                )}
+                {(mode === 'district' || mode === 'districtFixed') && (
+                    <MapLayer
+                        layerKey="district-label"
+                        layerOptions={{
+                            'source-layer': mapSources.nepalCentroid.layers.district,
+                            type: 'symbol',
+                            paint: mapTheme.district.textPaint,
+                            layout: mapTheme.district.textLayout,
+                            filter,
+                        }}
+                    />
                 )}
             </MapSource>
         </>

@@ -69,4 +69,27 @@
             }
         }
     }
+
+    @media screen and (max-width: 900px) {
+        max-height: 90vh;
+        max-width: 90vw;
+
+        >.header {
+            .heading {
+                font-size: var(--font-size-medium);
+                padding: var(--spacing-small);
+            }
+        }
+
+        .content {
+            .game-mode-card {
+                padding: calc(var(--spacing-medium) - var(--spacing-small));
+                min-width: 120px;
+
+                .content {
+                    padding: var(--spacing-small);
+                }
+            }
+        }
+    }
 }

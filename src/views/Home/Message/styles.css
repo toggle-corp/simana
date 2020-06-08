@@ -12,6 +12,12 @@
             color: var(--color-danger);
         }
     }
+
+    @media screen and (max-width: 900px) {
+        .current {
+            font-size: var(--font-size-medium);
+        }
+    }
 }
 
 @keyframes appear {

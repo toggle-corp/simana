@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { _cs } from '@togglecorp/fujs';
 import { IoMdClose } from 'react-icons/io';
 import { GrPowerReset } from 'react-icons/gr';
@@ -233,6 +233,19 @@ function Home(props: Props): React.ReactElement {
         setMapSourceLoaded(true);
     }, [setMapSourceLoaded]);
 
+    const boundsPadding = useMemo(
+        () => {
+            let padding = 100;
+            if (window.innerWidth <= 900) {
+                padding = 60;
+            } else if (window.innerWidth <= 720) {
+                padding = 50;
+            }
+            return padding;
+        },
+        [window.innerWidth],
+    );
+
     return (
         <div className={_cs(className, styles.home)}>
             <Map
@@ -252,7 +265,7 @@ function Home(props: Props): React.ReactElement {
                 />
                 <MapBounds
                     bounds={defaultBounds}
-                    padding={100}
+                    padding={boundsPadding}
                 />
                 <MapContainer className={styles.mapContainer} />
                 { mode && (

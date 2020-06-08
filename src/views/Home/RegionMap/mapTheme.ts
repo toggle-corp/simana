@@ -1,3 +1,26 @@
+const provinceTextPaint: mapboxgl.SymbolPaint = {
+    'text-color': '#002121',
+    'text-halo-color': 'rgba(255, 255, 255, 0.7)',
+    'text-halo-width': 2,
+};
+const districtTextPaint: mapboxgl.SymbolPaint = {
+    'text-color': '#002121',
+    'text-halo-color': 'rgba(255, 255, 255, 0.7)',
+    'text-halo-width': 2,
+};
+const provinceTextLayout: mapboxgl.SymbolLayout = {
+    'text-field': ['get', 'title'],
+    'text-size': 20,
+    'text-justify': 'center',
+    'text-anchor': 'center',
+};
+const districtTextLayout: mapboxgl.SymbolLayout = {
+    'text-field': ['get', 'title'],
+    'text-size': 20,
+    'text-justify': 'center',
+    'text-anchor': 'center',
+};
+
 const provinceFillPaint: mapboxgl.FillPaint = {
     'fill-color': [
         'case',
@@ -62,10 +85,14 @@ const mapTheme = {
     province: {
         outlinePaint: provinceOutlinePaint,
         fillPaint: provinceFillPaint,
+        textPaint: provinceTextPaint,
+        textLayout: provinceTextLayout,
     },
     district: {
         outlinePaint: districtOutlinePaint,
         fillPaint: districtFillPaint,
+        textPaint: districtTextPaint,
+        textLayout: districtTextLayout,
     },
 };
 

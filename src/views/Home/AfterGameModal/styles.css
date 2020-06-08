@@ -7,6 +7,8 @@
     padding: var(--spacing-large);
     width: 500px;
     height: 400px;
+    max-width: 80vw;
+    max-height: 80vh;
     overflow: auto;
 
     >.header {
@@ -59,5 +61,30 @@
         flex-shrink: 0;
         justify-content: space-around;
         padding: var(--spacing-medium);
+    }
+
+    @media screen and (max-width: 900px) {
+        padding: var(--spacing-medium);
+
+        >.header {
+            .heading {
+                padding: var(--spacing-small);
+                font-size: var(--font-size-medium);
+            }
+        }
+
+        .content {
+            .score {
+                .label {
+                    padding: var(--spacing-small);
+                    font-size: var(--font-size-medium);
+                }
+
+                .value {
+                    padding: var(--spacing-small);
+                    font-size: var(--font-size-large);
+                }
+            }
+        }
     }
 }
