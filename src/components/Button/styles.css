@@ -1,0 +1,11 @@
+.button {
+    outline: none;
+    border: 0;
+    border-radius: calc(1em + var(--spacing-medium));
+    background-color: var(--color-accent);
+    cursor: pointer;
+    padding: var(--spacing-medium) var(--spacing-large);
+    color: var(--color-text-on-accent);
+    font-family: inherit;
+    font-weight: var(--font-weight-bold);
+}

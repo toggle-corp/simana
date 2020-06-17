@@ -1,0 +1,45 @@
+.message {
+    .current {
+        opacity: 0;
+        animation: appear .2s ease-in-out forwards, zoomed-fade-out .2s 1.8s ease-in-out forwards;
+        color: var(--color-accent);
+        font-size: var(--font-size-super-large);
+        font-weight: bold;
+    }
+
+    &.bad {
+        .current {
+            color: var(--color-danger);
+        }
+    }
+
+    @media screen and (max-width: 900px) {
+        .current {
+            font-size: var(--font-size-medium);
+        }
+    }
+}
+
+@keyframes appear {
+    from {
+        transform: translateY(-10px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes zoomed-fade-out {
+    from {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    to {
+        transform: translateY(-10px);
+        opacity: 0;
+    }
+}

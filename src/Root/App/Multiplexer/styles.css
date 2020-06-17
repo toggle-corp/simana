@@ -1,16 +1,20 @@
 .multiplexer {
     display: flex;
+    position: relative;
     flex-direction: column;
+    background-color: var(--color-background);
     width: 100vw;
     height: 100vh;
 
     .navbar {
-        flex-shrink: 0;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 1;
     }
 
     .view {
         flex-grow: 1;
-        padding: var(--spacing-large);
         overflow: auto;
     }
 
@@ -21,3 +25,32 @@
         justify-content: center;
     }
 }
+
+.warning {
+    display: none;
+}
+
+@media screen and (orientation:portrait) {
+    .multiplexer {
+        display: none;
+    }
+
+    .warning {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        text-align: center;
+        height: 100vh;
+        width: 100vw;
+        z-index: 111;
+        padding: var(--spacing-large);
+        background-color: var(--color-background);
+        background-image: url('../../../assets/background.png');
+        background-position: center center;
+        background-size: cover;
+        background-blend-mode: lighten;
+    }
+}
+

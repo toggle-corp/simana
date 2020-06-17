@@ -1,0 +1,95 @@
+.game-mode-selection-modal {
+    display: flex;
+    flex-direction: column;
+    border-radius: var(--radius-border-medium);
+    box-shadow: 0 3px 10px -3px rgba(0, 0, 0, .3);
+    background-color: var(--color-foreground);
+    padding: var(--spacing-large);
+    width: calc(100% - 2 * var(--spacing-medium));
+    max-width: 740px;
+    height: calc(100% - 2 * var(--spacing-medium));
+    max-height: 460px;
+    overflow: auto;
+
+    >.header {
+        flex-shrink: 0;
+        text-align: center;
+
+        .heading {
+            padding: var(--spacing-medium);
+        }
+    }
+
+    .content {
+        display: flex;
+        align-items: center;
+        flex-grow: 1;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        overflow: auto;
+
+        .game-mode-card {
+            display: flex;
+            align-items: center;
+            flex-basis: 0;
+            flex-direction: column;
+            flex-grow: 1;
+            padding: calc(var(--spacing-large) - var(--spacing-medium));
+            min-width: 160px;
+
+            .header {
+                flex-shrink: 0;
+
+                .heading {
+                    padding: var(--spacing-medium);
+                    text-align: center;
+                    color: rgba(0, 100, 0, .5);
+                    font-size: var(--font-size-small);
+                }
+            }
+
+            .content {
+                flex-grow: 1;
+                padding: var(--spacing-medium);
+
+                .icon {
+                    color: rgba(0, 0, 0, .3);
+                    font-size: 64px;
+
+                    path {
+                        stroke: currentColor;
+                        stroke-width: 1px;
+                    }
+                }
+            }
+
+            .actions {
+                flex-shrink: 0;
+                padding: var(--spacing-small);
+            }
+        }
+    }
+
+    @media screen and (max-width: 900px) {
+        max-height: 90vh;
+        max-width: 90vw;
+
+        >.header {
+            .heading {
+                font-size: var(--font-size-medium);
+                padding: var(--spacing-small);
+            }
+        }
+
+        .content {
+            .game-mode-card {
+                padding: calc(var(--spacing-medium) - var(--spacing-small));
+                min-width: 120px;
+
+                .content {
+                    padding: var(--spacing-small);
+                }
+            }
+        }
+    }
+}

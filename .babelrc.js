@@ -56,6 +56,11 @@ module.exports = (api) => {
                         '#ts': './src/ts',
                         '#utils': './src/utils',
                         '#views': './src/views',
+
+                        '#types': './src/types',
+                        '#hooks': './src/hooks',
+                        '#re-map': './src/vendor/re-map',
+                        '#assets': './src/assets',
                     },
                 },
             ],

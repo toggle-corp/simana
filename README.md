@@ -1,3 +1,3 @@
-# Nepal Geo Explorer
+# Simana
 
 Quiz game to explore places in Nepal

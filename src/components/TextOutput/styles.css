@@ -1,0 +1,15 @@
+.text-output {
+    display: flex;
+    align-items: center;
+    padding: calc(var(--spacing-medium) - var(--spacing-small));
+
+    .label {
+        padding: var(--spacing-small);
+    }
+
+    .value {
+        padding: var(--spacing-small);
+        font-weight: var(--font-weight-bold);
+    }
+}
+

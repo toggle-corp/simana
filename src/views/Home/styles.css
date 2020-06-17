@@ -1,9 +1,162 @@
 .home {
-    background-color: var(--color-background-alt);
-    height: var(--height-content);
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    background-color: var(--color-background);
+    background-image: url('../../assets/background.png');
+    background-position: center center;
+    background-size: cover;
+    background-blend-mode: lighten;
+    overflow: auto;
+
+    .map-container {
+        flex-grow: 1;
+        opacity: 1;
+
+        canvas {
+            outline: none;
+        }
+    }
+
+    .initialize-message {
+        display: flex;
+        position: absolute;
+        top: 20%;
+        left: 0;
+        align-items: center;
+        justify-content: center;
+        z-index: 1;
+        width: 100%;
+        font-size: var(--font-size-large);
+        font-weight: var(--font-weight-bold);
+
+        .ready {
+            position: absolute;
+            opacity: 0;
+            animation: zoomed-fade-out .7s ease-in forwards;
+        }
+
+        .get-set {
+            position: absolute;
+            opacity: 0;
+            animation: zoomed-fade-out .7s 1s ease-in forwards;
+        }
+
+        .go {
+            position: absolute;
+            opacity: 0;
+            animation: zoomed-fade-out .7s 2s ease-in forwards;
+        }
+    }
+
+    .challenge {
+        position: absolute;
+        bottom: 15%;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1;
+    }
+
+    .stats {
+        position: absolute;
+        top: 0;
+        right: 0;
+        z-index: 1;
+        width: 100%;
+    }
 
     .message {
-        display: flex;
-        flex-direction: column;
+        position: absolute;
+        top: 20%;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1;
+        pointer-events: none;
+    }
+
+    .score-board {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        transform: translateY(-50%);
+        z-index: 1;
+    }
+
+    .active-game-actions {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        z-index: 1;
+        animation: fade-in .2s ease-in forwards;
+
+        button {
+            margin: var(--spacing-medium);
+
+            path {
+                stroke: #fff;
+            }
+        }
+    }
+
+    .map-loading-message {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1;
+    }
+
+    @media screen and (max-width: 1080px) {
+        .initialize-message {
+            font-size: var(--font-size-large);
+            top: 15%;
+        }
+
+        .message {
+            top: 15%;
+        }
+
+        .challenge {
+            bottom: 8%;
+            font-size: var(--font-size-large);
+        }
+    }
+
+    @media screen and (max-width: 900px) {
+        .initialize-message {
+            font-size: var(--font-size-medium);
+            top: 15%;
+        }
+
+        .message {
+            top: 15%;
+        }
+
+        .challenge {
+            bottom: 5%;
+            font-size: var(--font-size-medium);
+        }
+    }
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes zoomed-fade-out {
+    from {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    to {
+        transform: scale(2);
+        opacity: 0;
     }
 }

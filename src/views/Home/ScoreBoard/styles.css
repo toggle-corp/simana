@@ -1,0 +1,43 @@
+.score-board {
+    display: flex;
+    flex-direction: column;
+
+    .text-output {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        justify-content: center;
+        padding: var(--spacing-medium);
+        width: 108px;
+
+        .label {
+            padding: var(--spacing-small);
+            font-size: var(--font-size-small);
+        }
+
+        .value {
+            display: flex;
+            padding: var(--spacing-small);
+            font-size: var(--font-size-large);
+
+            .current {
+                padding: var(--spacing-extra-small);
+            }
+
+            .separator {
+                padding: var(--spacing-extra-small);
+            }
+
+            .limit {
+                padding: var(--spacing-extra-small);
+            }
+        }
+    }
+
+    @media screen and (max-width: 900px) {
+        .text-output {
+            padding: var(--spacing-small);
+            width: 86px;
+        }
+    }
+}

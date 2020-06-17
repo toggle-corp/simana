@@ -1,0 +1,90 @@
+.after-game-play-modal {
+    display: flex;
+    flex-direction: column;
+    border-radius: var(--radius-border-medium);
+    box-shadow: 0 3px 10px -3px rgba(0, 0, 0, .3);
+    background-color: var(--color-foreground);
+    padding: var(--spacing-large);
+    width: 500px;
+    height: 400px;
+    max-width: 80vw;
+    max-height: 80vh;
+    overflow: auto;
+
+    >.header {
+        flex-shrink: 0;
+        text-align: center;
+
+        .heading {
+            padding: var(--spacing-medium);
+        }
+    }
+
+    .content {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        flex-grow: 1;
+        justify-content: center;
+        overflow: auto;
+
+        .score {
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            justify-content: center;
+
+            .label {
+                padding: var(--spacing-medium);
+                color: var(--color-text-label);
+                font-size: var(--font-size-large);
+                font-weight: var(--font-weight-bold);
+            }
+
+            .value {
+                padding: var(--spacing-medium);
+                font-size: var(--font-size-ultra-large);
+                font-weight: var(--font-weight-bold);
+            }
+        }
+
+        .mode {
+        }
+
+        .time {
+        }
+    }
+
+    .actions {
+        display: flex;
+        align-self: stretch;
+        flex-shrink: 0;
+        justify-content: space-around;
+        padding: var(--spacing-medium);
+    }
+
+    @media screen and (max-width: 900px) {
+        padding: var(--spacing-medium);
+
+        >.header {
+            .heading {
+                padding: var(--spacing-small);
+                font-size: var(--font-size-medium);
+            }
+        }
+
+        .content {
+            .score {
+                .label {
+                    padding: var(--spacing-small);
+                    font-size: var(--font-size-medium);
+                }
+
+                .value {
+                    padding: var(--spacing-small);
+                    font-size: var(--font-size-large);
+                }
+            }
+        }
+    }
+}
