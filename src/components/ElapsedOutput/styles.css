@@ -1,4 +1,6 @@
 .elapsed-output {
     display: flex;
+    align-items: center;
+    font-family: var(--font-family-monospace);
 }
 

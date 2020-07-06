@@ -10,6 +10,7 @@ import {
     shuffle,
     getMaxRounds,
     getMaxDuration,
+    getRoundDuration,
 } from '#utils/common';
 
 import {
@@ -19,7 +20,8 @@ import {
     Region,
 } from '#types';
 
-const DEFAULT_TICK_INTERVAL = 500;
+import useTimer from './useTimer';
+
 
 const regionMap: {
     [key in GameMode]: Region[];
@@ -41,87 +43,32 @@ const getRegions = (mode: GameMode, amount: number) => {
     return shuffledRegions;
 };
 
-export function useTimer(
-    use: boolean,
-    gameId: number | string,
-    tickInterval:number = DEFAULT_TICK_INTERVAL,
-) {
-    const [tick, setTick] = React.useState(0);
-    const initialTimeRef = React.useRef(new Date().getTime());
-    const [initialTime, setInitialTime] = React.useState(initialTimeRef.current);
-    const [initialLapTime, setInitialLapTime] = React.useState(initialTimeRef.current);
-    const [elapsed, setElapsed] = React.useState(0);
-    const [lapElapsed, setLapElapsed] = React.useState(0);
-    const shouldTick = React.useRef(use);
+const fixedGameModeMap: {
+    [key in GameMode]: boolean;
+} = {
+    province: false,
+    district: false,
+    provinceFixed: true,
+    districtFixed: true,
+};
 
-    const addLap = React.useCallback(() => {
-        setInitialLapTime(new Date().getTime());
-        setLapElapsed(0);
-    }, [setInitialLapTime, setLapElapsed]);
-
-    React.useEffect(() => {
-        shouldTick.current = use;
-        if (use) {
-            setInitialTime(new Date().getTime());
-        }
-    }, [use, gameId, shouldTick, setInitialTime]);
-
-    const handleTick = React.useCallback(() => {
-        const { current } = shouldTick;
-
-        if (current) {
-            const now = new Date().getTime();
-            const currentElapsed = now - initialTime;
-            const currentLapElapsed = now - initialLapTime;
-            setTick((prevTick) => prevTick + 1);
-            setElapsed(currentElapsed);
-            setLapElapsed(currentLapElapsed);
-        }
-    }, [initialTime, initialLapTime, setTick, setElapsed, setLapElapsed, shouldTick]);
-
-    const cleanUp = React.useCallback((interval) => {
-        window.clearInterval(interval);
-        if (!shouldTick.current) {
-            setElapsed(0);
-        }
-    }, [setElapsed, shouldTick]);
-
-    React.useEffect(() => {
-        let interval:number | undefined;
-
-        if (use) {
-            interval = window.setInterval(handleTick, tickInterval);
-        } else {
-            cleanUp(interval);
-        }
-
-        return (): void => { cleanUp(interval); };
-    }, [tickInterval, handleTick, use, cleanUp]);
-
-    return {
-        tick,
-        elapsed,
-        addLap,
-        lapElapsed,
-    };
-}
-
-export function useGameplay(
-    gameId: string | number,
+export default function useGameplay(
     gameState: GameState,
     gameMode: GameMode | undefined,
-    onGameplayEnd: (elapsed: number) => void,
+    onRoundStart: (timestamp: number) => void,
     onRoundEnd: (round: number) => void,
+    onGameplayEnd: (ticks: number[]) => void,
 ) {
-    const {
-        tick,
-        elapsed,
-        addLap,
-        lapElapsed,
-    } = useTimer(gameState === 'play', gameId);
-    const [round, setRound] = React.useState(0);
-    const [challenges, setChallenges] = React.useState<Challenge[]>([]);
+    const isRoundRunning = gameState === 'round' || gameState === 'round-start' || gameState === 'round-end';
+    const roundDuration = gameMode ? getRoundDuration(gameMode) : ROUND_DURATION;
 
+    const {
+        ticks,
+        forceTick,
+    } = useTimer(isRoundRunning, roundDuration);
+
+    const [challenges, setChallenges] = React.useState<Challenge[]>([]);
+    const [round, setRound] = React.useState<number>(0);
 
     React.useEffect(() => {
         if (gameMode && gameState === 'initialize') {
@@ -133,19 +80,17 @@ export function useGameplay(
                 result: undefined,
                 attempts: [],
             }));
+
             setChallenges(newChallenges);
-            console.info('initializing......');
         }
-    }, [gameState, setChallenges, gameId, gameMode, setRound, addLap]);
+    }, [gameState, setChallenges, gameMode]);
 
     React.useEffect(() => {
-        console.info('game state changed', gameState);
-        if (gameMode && gameState === 'play') {
-            setRound(0);
-            addLap();
-            console.info('setting round......');
+        if (gameState === 'round') {
+            const timestamp = forceTick();
+            onRoundStart(timestamp);
         }
-    }, [gameId, gameMode, gameState, setRound, addLap]);
+    }, [gameState, forceTick, onRoundStart]);
 
     const addAttempt = React.useCallback((answer) => {
         const currentChallenge = challenges[round];
@@ -165,47 +110,53 @@ export function useGameplay(
         return updatedChallenge.result;
     }, [challenges, round, setChallenges]);
 
-    if (gameMode && gameState === 'play') {
-        let currentRound = round;
+    React.useEffect(() => {
+        if (!gameMode || !isRoundRunning) {
+            return;
+        }
+
+        let shouldUpdateRound = false;
+
+        if (fixedGameModeMap[gameMode]) {
+            if (ticks.length > round) {
+                shouldUpdateRound = true;
+            }
+        }
+
         const currentChallenge = challenges[round];
-
         if (currentChallenge?.result) {
-            currentRound += 1;
-            addLap();
+            shouldUpdateRound = true;
+            forceTick(false);
         }
 
-        switch (gameMode) {
-            case 'provinceFixed':
-            case 'districtFixed':
-                if (lapElapsed >= ROUND_DURATION) {
-                    currentRound += 1;
-                    addLap();
-                    onRoundEnd(currentRound);
-                }
-                break;
+        if (shouldUpdateRound) {
+            const newRound = round + 1;
+            const maxRounds = getMaxRounds(gameMode);
 
-            case 'province':
-            case 'district':
-            default:
-                break;
+            if (newRound >= maxRounds) {
+                setRound(0);
+                onGameplayEnd(ticks);
+            } else {
+                setRound(newRound);
+                onRoundEnd(newRound);
+            }
         }
+    }, [
+        challenges,
+        ticks,
+        round,
+        gameMode,
+        setRound,
+        onRoundEnd,
+        forceTick,
+        onGameplayEnd,
+        isRoundRunning,
+    ]);
 
-        const maxRounds = getMaxRounds(gameMode);
-        const gameEnded = currentRound >= maxRounds || elapsed >= getMaxDuration(gameMode);
-        if (gameEnded) {
-            setRound(0);
-            onGameplayEnd(elapsed);
-        } else if (currentRound !== round) {
-            setRound(currentRound);
-        }
-    }
-
-    return {
-        tick,
-        elapsed,
+    return React.useMemo(() => ({
+        ticks,
         round,
         challenges,
         addAttempt,
-        lapElapsed,
-    };
+    }), [ticks, round, challenges, addAttempt]);
 }

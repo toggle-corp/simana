@@ -6,7 +6,10 @@ import {
     ROUND_DURATION,
     gameModes,
 } from '#utils/constants';
-import { GameMode } from '#types';
+import {
+    GameMode,
+    GameState,
+} from '#types';
 
 import ElapsedOutput from '#components/ElapsedOutput';
 import TextOutput from '#components/TextOutput';
@@ -15,18 +18,18 @@ import styles from './styles.css';
 
 
 interface Props {
-    lapElapsed: number;
-    elapsed: number;
+    startTimestamp: number;
     mode: GameMode;
+    state: GameState;
     username: string;
     className?: string;
 }
 
 function Stats(props: Props) {
     const {
-        lapElapsed,
-        elapsed,
+        startTimestamp,
         mode,
+        state,
         username,
         className,
     } = props;
@@ -45,7 +48,8 @@ function Stats(props: Props) {
                     label="Time elapsed:"
                     value={(
                         <ElapsedOutput
-                            value={elapsed}
+                            initialTimestamp={startTimestamp}
+                            run={state === 'round'}
                         />
                     )}
                 />
@@ -55,7 +59,10 @@ function Stats(props: Props) {
                     label="Time remaining:"
                     value={(
                         <ElapsedOutput
-                            value={ROUND_DURATION - lapElapsed}
+                            initialTimestamp={startTimestamp}
+                            countdown
+                            targetDuration={ROUND_DURATION}
+                            run={state === 'round'}
                         />
                     )}
                 />

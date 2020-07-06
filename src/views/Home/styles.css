@@ -18,35 +18,12 @@
         }
     }
 
-    .initialize-message {
-        display: flex;
+    .game-start-message {
         position: absolute;
         top: 20%;
         left: 0;
-        align-items: center;
-        justify-content: center;
         z-index: 1;
         width: 100%;
-        font-size: var(--font-size-large);
-        font-weight: var(--font-weight-bold);
-
-        .ready {
-            position: absolute;
-            opacity: 0;
-            animation: zoomed-fade-out .7s ease-in forwards;
-        }
-
-        .get-set {
-            position: absolute;
-            opacity: 0;
-            animation: zoomed-fade-out .7s 1s ease-in forwards;
-        }
-
-        .go {
-            position: absolute;
-            opacity: 0;
-            animation: zoomed-fade-out .7s 2s ease-in forwards;
-        }
     }
 
     .challenge {
@@ -108,8 +85,8 @@
 
     @media screen and (max-width: 1080px) {
         .initialize-message {
-            font-size: var(--font-size-large);
             top: 15%;
+            font-size: var(--font-size-large);
         }
 
         .message {
@@ -124,8 +101,8 @@
 
     @media screen and (max-width: 900px) {
         .initialize-message {
-            font-size: var(--font-size-medium);
             top: 15%;
+            font-size: var(--font-size-medium);
         }
 
         .message {
@@ -146,17 +123,5 @@
 
     to {
         opacity: 1;
-    }
-}
-
-@keyframes zoomed-fade-out {
-    from {
-        transform: scale(1);
-        opacity: 1;
-    }
-
-    to {
-        transform: scale(2);
-        opacity: 0;
     }
 }

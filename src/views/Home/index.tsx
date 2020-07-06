@@ -3,27 +3,20 @@ import { _cs } from '@togglecorp/fujs';
 import { IoMdClose } from 'react-icons/io';
 import { GrPowerReset } from 'react-icons/gr';
 
-import Map from '#re-map';
-import MapContainer from '#re-map/MapContainer';
-import MapBounds from '#re-map/MapBounds';
-import { MapChildContext } from '#re-map/context';
-
-// import backgroundImage from '#assets/background.png';
-
 import {
-    BBox,
     GameMode,
-    GameState,
     Message,
     MapState,
 } from '#types';
-import { useGameplay } from '#hooks';
+import useGameplay from '#hooks/useGameplay';
+import useGameState from '#hooks/useGameState';
 import { getRandomPositiveMessage } from '#utils/common';
 import {
     districtIdByCode,
     provinceIdByCode,
 } from '#utils/constants';
 import RoundButton from '#components/RoundButton';
+import GameStartMessage from '#components/GameStartMessage';
 
 import UserInformationModal from './UserInformationModal';
 import GameModeSelectionModal from './GameModeSelectionModal';
@@ -40,44 +33,9 @@ interface Props {
     className?: string;
 }
 
-// const lightStyle = 'mapbox://styles/mapbox/light-v10';
-const blankStyle = 'mapbox://styles/togglecorp/ckawhdhe23if41ipd9kcwxaa6';
 
-const defaultBounds: BBox = [
-    80.05858661752784,
-    26.347836996368667,
-    88.20166918432409,
-    30.44702867091792,
-];
-
-const HINT_HIGHLIGHT_TIMEOUT = 2000;
-const CLICK_HIGHLIGHT_TIMEOUT = 1000;
-
-function MapLoadMonitor(p: {
-    onSourceLoad: () => void;
-}) {
-    const { onSourceLoad } = p;
-    const { map } = React.useContext(MapChildContext);
-    const handleMapLoad = React.useCallback((e) => {
-        if (e.isSourceLoaded && e.tile && onSourceLoad) {
-            onSourceLoad();
-        }
-    }, [onSourceLoad]);
-
-    React.useEffect(() => {
-        if (map) {
-            map.on('data', handleMapLoad);
-        }
-
-        return () => {
-            if (map) {
-                map.off('data', handleMapLoad);
-            }
-        };
-    }, [map, handleMapLoad]);
-
-    return null;
-}
+const HINT_HIGHLIGHT_TIMEOUT = 2800;
+const CLICK_HIGHLIGHT_TIMEOUT = 3000;
 
 const gameModeToCodeMap: {
     [key in GameMode]: { [key: string]: number };
@@ -90,26 +48,27 @@ const gameModeToCodeMap: {
 
 function Home(props: Props): React.ReactElement {
     const { className } = props;
-    const [gameId, setGameId] = React.useState(new Date().getTime());
     const [clickedMapState, setClickedMapState] = React.useState<MapState | undefined>();
     const [hintMapState, setHintMapState] = React.useState<MapState | undefined>();
 
-    const [gameDuration, setGameDuration] = React.useState(0);
     const [message, setMessage] = React.useState<Message | undefined>(undefined);
-    const [gameState, setGameState] = React.useState<GameState>('user-info');
     const [mapSourceLoaded, setMapSourceLoaded] = React.useState<boolean>(false);
+    const [roundStartTimestamp, setRoundStartTimestamp] = React.useState<number>(0);
 
-    const [name, setName] = React.useState('fhx');
+    const gameState = useGameState(mapSourceLoaded);
+
+    const [name, setName] = React.useState('Anonymous');
     const [mode, setMode] = React.useState<GameMode | undefined>();
+
     const answerRef = React.useRef<string | undefined>();
     const clickedTimeoutRef = React.useRef<number | undefined>();
     const hintTimeoutRef = React.useRef<number | undefined>();
 
-    const handleGameplayEnd = React.useCallback((totalElapsed) => {
-        setGameState('finished');
-        console.info('game finished...');
-        setGameDuration(totalElapsed);
-    }, [setGameState, setGameDuration]);
+    const handleGameplayEnd = React.useCallback((ticks: number[]) => {
+        const totalDuration = ticks.reduce((acc, val) => acc + val, 0);
+        gameState.endGame();
+        console.info('game finished...', gameState.current, totalDuration);
+    }, [gameState]);
 
     const showCorrectAnswer = React.useCallback((gameMode: GameMode, regionCode: string) => {
         setHintMapState({
@@ -123,79 +82,60 @@ function Home(props: Props): React.ReactElement {
     }, [setHintMapState]);
 
     const handleRoundEnd = React.useCallback(() => {
-        if (gameState === 'play' && mode && answerRef.current) {
+        if (gameState.current === 'round' && mode && answerRef.current) {
             showCorrectAnswer(mode, answerRef.current);
+            gameState.endCurrentRound();
         }
     }, [showCorrectAnswer, answerRef, mode, gameState]);
 
+    const handleRoundStart = React.useCallback((timestamp) => {
+        setRoundStartTimestamp(timestamp);
+    }, [setRoundStartTimestamp]);
+
     const {
+        ticks,
         round,
-        elapsed,
-        lapElapsed,
         addAttempt,
         challenges,
-    } = useGameplay(gameId, gameState, mode, handleGameplayEnd, handleRoundEnd);
+    } = useGameplay(gameState.current, mode, handleRoundStart, handleRoundEnd, handleGameplayEnd);
 
     React.useEffect(() => {
         const challange = challenges[round];
         answerRef.current = challange?.answer;
     }, [challenges, round, answerRef]);
 
-    React.useEffect(() => {
-        let timeout: number | undefined;
-        if (gameState === 'initialize' && mapSourceLoaded) {
-            const delay = 3000;
-            console.info('game starts in', delay / 1000);
-            timeout = window.setTimeout(() => { setGameState('play'); }, delay);
-        }
-        return () => { window.clearTimeout(timeout); };
-    }, [gameState, setGameState, mapSourceLoaded]);
-
-    const startNewGame = React.useCallback((shouldInvalidateMap?: boolean, gameMode?: GameMode) => {
-        const newGameId = new Date().getTime();
-        setGameDuration(0);
-        setGameId(newGameId);
-        setGameState('initialize');
-
-        if (shouldInvalidateMap) {
-            setMapSourceLoaded(false);
-        }
-
-        if (gameMode) {
-            setMode(gameMode);
-        }
-    }, [setMode, setGameId, setMapSourceLoaded, setGameDuration]);
-
     const handleUserInfoStartClick = React.useCallback((userName) => {
         setName(userName);
-        setGameState('mode-selection');
-    }, [setGameState]);
+        gameState.next();
+    }, [gameState]);
 
     const handleGameModeSelect = React.useCallback((gameMode) => {
-        startNewGame(true, gameMode);
-    }, [startNewGame]);
+        setMode(gameMode);
+        gameState.next();
+    }, [gameState, setMode]);
 
     const handlePlayAgainButtonClick = React.useCallback(() => {
-        startNewGame();
-    }, [startNewGame]);
+        gameState.startGame();
+    }, [gameState]);
+
     const handleNicknameButtonClick = React.useCallback(() => {
-        setGameState('user-info');
-    }, [setGameState]);
+        gameState.navigateTo('user-info');
+    }, [gameState]);
+
     const handleGameModeButtonClick = React.useCallback(() => {
-        setGameState('mode-selection');
-    }, [setGameState]);
+        gameState.navigateTo('mode-selection');
+    }, [gameState]);
 
     const handleSurrenderButtonClick = React.useCallback(() => {
-        setGameState('finished');
-        setGameDuration(elapsed);
-    }, [setGameState, setGameDuration, elapsed]);
+        gameState.navigateTo('game-end');
+    }, [gameState]);
 
     const handleRestartRoundButtonClick = React.useCallback(() => {
-        startNewGame();
-    }, [startNewGame]);
+        gameState.startGame();
+    }, [gameState]);
 
     const handleRegionClick = React.useCallback((properties) => {
-        if (gameState === 'play' && mode) {
+        if (gameState.current === 'round' && mode) {
             if (addAttempt(properties.code) === 'fail' && answerRef.current) {
                 showCorrectAnswer(mode, answerRef.current);
             }
@@ -233,58 +173,31 @@ function Home(props: Props): React.ReactElement {
         setMapSourceLoaded(true);
     }, [setMapSourceLoaded]);
 
-    const boundsPadding = useMemo(
-        () => {
-            let padding = 100;
-            if (window.innerWidth <= 900) {
-                padding = 60;
-            } else if (window.innerWidth <= 720) {
-                padding = 50;
-            }
-            return padding;
-        },
-        [window.innerWidth],
-    );
+    const roundRunning = React.useMemo(() => (
+        gameState.current === 'round-start'
+        || gameState.current === 'round'
+        || gameState.current === 'round-end'
+        || gameState.current === 'pre-game-end'
+    ), [gameState]);
 
     return (
         <div className={_cs(className, styles.home)}>
-            <Map
-                key={gameId}
-                mapStyle={blankStyle}
-                mapOptions={{
-                    logoPosition: 'bottom-left',
-                    minZoom: 5,
-                    bounds: defaultBounds,
-                    interactive: false,
-                }}
-                scaleControlShown={false}
-                navControlShown={false}
-            >
-                <MapLoadMonitor
-                    onSourceLoad={handleMapSourceLoad}
-                />
-                <MapBounds
-                    bounds={defaultBounds}
-                    padding={boundsPadding}
-                />
-                <MapContainer className={styles.mapContainer} />
-                { mode && (
-                    <RegionMap
-                        mode={mode}
-                        onRegionClick={handleRegionClick}
-                        clickedMapState={clickedMapState}
-                        hintMapState={hintMapState}
-                    />
-                )}
-            </Map>
-            {mode && (gameState === 'play' || gameState === 'initialize') && (
+            <RegionMap
+                className={styles.mapContainer}
+                mode={mode}
+                onMapSourceLoad={handleMapSourceLoad}
+                onRegionClick={handleRegionClick}
+                clickedMapState={clickedMapState}
+                hintMapState={hintMapState}
+            />
+            {mode && (roundRunning || gameState.current === 'initialize') && (
                 <>
                     <Stats
                         className={styles.stats}
                         mode={mode}
                         username={name}
-                        lapElapsed={gameState === 'initialize' ? 0 : lapElapsed}
-                        elapsed={gameState === 'initialize' ? 0 : elapsed}
+                        startTimestamp={roundStartTimestamp}
+                        state={gameState.current}
                     />
                     <ScoreBoard
                         mode={mode}
@@ -298,7 +211,7 @@ function Home(props: Props): React.ReactElement {
                 className={styles.message}
                 message={message}
             />
-            { gameState === 'play' && (
+            { gameState.current === 'round' && (
                 <Challenge
                     round={round}
                     className={styles.challenge}
@@ -306,46 +219,38 @@ function Home(props: Props): React.ReactElement {
                     mode={mode}
                 />
             )}
-            { gameState === 'initialize' && !mapSourceLoaded && (
+            { gameState.current === 'initialize' && !mapSourceLoaded && (
                 <div className={styles.mapLoadingMessage}>
                     Loading map...
                 </div>
             )}
-            { gameState === 'initialize' && mapSourceLoaded && (
-                <div className={styles.initializeMessage}>
-                    <div className={styles.ready}>
-                        Ready!
-                    </div>
-                    <div className={styles.getSet}>
-                        Get set!
-                    </div>
-                    <div className={styles.go}>
-                        Go! Go! Go!
-                    </div>
-                </div>
+            { gameState.current === 'initialize' && mapSourceLoaded && (
+                <GameStartMessage
+                    className={styles.gameStartMessage}
+                />
             )}
-            { gameState === 'user-info' && (
+            { gameState.current === 'user-info' && (
                 <UserInformationModal
                     onStartClick={handleUserInfoStartClick}
                 />
             )}
-            { gameState === 'mode-selection' && (
+            { gameState.current === 'mode-selection' && (
                 <GameModeSelectionModal
                     onModeSelect={handleGameModeSelect}
                 />
             )}
-            { gameState === 'finished' && mode && (
+            { gameState.current === 'game-end' && mode && (
                 <AfterGameModal
                     mode={mode}
-                    elapsed={gameDuration}
                     challenges={challenges}
                     onPlayAgainClick={handlePlayAgainButtonClick}
                     onGameModeClick={handleGameModeButtonClick}
                     onNicknameClick={handleNicknameButtonClick}
                     username={name}
+                    ticks={ticks}
                 />
             )}
-            { gameState === 'play' && (
+            { roundRunning && (
                 <div className={styles.activeGameActions}>
                     <RoundButton
                         tooltip="Restart round"

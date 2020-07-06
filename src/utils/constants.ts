@@ -17,10 +17,12 @@ export const MAX_ATTEMPTS = 3;
 
 export const TOTAL_PROVINCES = 7;
 export const TOTAL_DISTRICTS = 77;
-export const PROVINCE_MAX_ROUNDS = 5;
+export const PROVINCE_MAX_ROUNDS = 3;
 export const DISTRICTS_MAX_ROUNDS = 10;
 
 export const SCORE_UNIT = 500;
+
+export const DEFAULT_TICK_INTERVAL = 500;
 
 export const positiveMessageList = [
     'Amazing!',

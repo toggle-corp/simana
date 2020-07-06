@@ -22,8 +22,8 @@ interface Props {
     onGameModeClick: () => void;
     challenges: Challenge[];
     mode: GameMode,
-    elapsed: number,
     username: string;
+    ticks: number[];
 }
 
 function AfterGameModal(props: Props): React.ReactElement {
@@ -33,13 +33,17 @@ function AfterGameModal(props: Props): React.ReactElement {
         onGameModeClick,
         onNicknameClick,
         mode,
-        elapsed,
         username,
+        ticks,
     } = props;
 
     const score = React.useMemo(() => (
         calculateScore(challenges)
     ), [challenges]);
+
+    const elapsed = React.useMemo(() => (
+        ticks.reduce((acc, val) => acc + val, 0)
+    ), [ticks]);
 
     return (
         <Haze>
@@ -68,7 +72,7 @@ function AfterGameModal(props: Props): React.ReactElement {
                         label="Time:"
                         value={(
                             <ElapsedOutput
-                                value={elapsed}
+                                totalDuration={elapsed}
                             />
                         )}
                     />

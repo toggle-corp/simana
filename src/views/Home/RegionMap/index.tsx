@@ -1,23 +1,38 @@
 import React, { useMemo } from 'react';
 import { unique } from '@togglecorp/fujs';
 
+import Map from '#re-map';
+import MapContainer from '#re-map/MapContainer';
+import MapBounds from '#re-map/MapBounds';
 import MapSource from '#re-map/MapSource';
 import State from '#re-map/MapSource/MapState';
 import MapLayer from '#re-map/MapSource/MapLayer';
-
+import { MapChildContext } from '#re-map/context';
 
 import {
     GameMode,
     MapState,
+    BBox,
 } from '#types';
 import mapTheme from './mapTheme';
 
 interface Props {
-    mode: GameMode;
+    className?: string;
+    mode?: GameMode;
     onRegionClick: (p: mapboxgl.MapboxGeoJSONFeature['properties']) => void;
     clickedMapState?: MapState;
     hintMapState?: MapState;
+    onMapSourceLoad: () => void;
 }
+
+const blankStyle = 'mapbox://styles/togglecorp/ckawhdhe23if41ipd9kcwxaa6';
+
+const defaultBounds: BBox = [
+    80.05858661752784,
+    26.347836996368667,
+    88.20166918432409,
+    30.44702867091792,
+];
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 const noOp = () => {};
@@ -43,12 +58,41 @@ const mapSources = {
     },
 };
 
+function MapLoadMonitor(p: {
+    onSourceLoad: () => void;
+}) {
+    const { onSourceLoad } = p;
+    const { map } = React.useContext(MapChildContext);
+    const handleMapLoad = React.useCallback((e) => {
+        if (e.isSourceLoaded && e.tile && onSourceLoad) {
+            onSourceLoad();
+        }
+    }, [onSourceLoad]);
+
+    React.useEffect(() => {
+        if (map) {
+            map.on('data', handleMapLoad);
+        }
+
+        return () => {
+            if (map) {
+                map.off('data', handleMapLoad);
+            }
+        };
+    }, [map, handleMapLoad]);
+
+    return null;
+}
+
+
 function RegionMap(props: Props) {
     const {
         mode,
         onRegionClick,
         clickedMapState,
         hintMapState,
+        onMapSourceLoad,
+        className,
     } = props;
 
     const handleProvinceClick = React.useCallback((e: mapboxgl.MapboxGeoJSONFeature) => {
@@ -101,8 +145,38 @@ function RegionMap(props: Props) {
         [clickedMapState, hintMapState],
     );
 
+    const boundsPadding = useMemo(
+        () => {
+            let padding = 100;
+            if (window.innerWidth <= 900) {
+                padding = 60;
+            } else if (window.innerWidth <= 720) {
+                padding = 50;
+            }
+            return padding;
+        },
+        [],
+    );
+
     return (
-        <>
+        <Map
+            // key={gameId}
+            mapStyle={blankStyle}
+            mapOptions={{
+                logoPosition: 'bottom-left',
+                minZoom: 5,
+                bounds: defaultBounds,
+                interactive: false,
+            }}
+            scaleControlShown={false}
+            navControlShown={false}
+        >
+            <MapLoadMonitor onSourceLoad={onMapSourceLoad} />
+            <MapBounds
+                bounds={defaultBounds}
+                padding={boundsPadding}
+            />
+            <MapContainer className={className} />
             <MapSource
                 sourceKey="country"
                 sourceOptions={{
@@ -207,7 +281,7 @@ function RegionMap(props: Props) {
                     />
                 )}
             </MapSource>
-        </>
+        </Map>
     );
 }
 

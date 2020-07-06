@@ -116,3 +116,4 @@ export function useHash() {
 }
 
 export * from './useGameplay';
+export * from './useTimer';

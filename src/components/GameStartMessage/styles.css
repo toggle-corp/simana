@@ -1,0 +1,47 @@
+.game-start-message {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--font-size-large);
+    font-weight: var(--font-weight-bold);
+
+    .ready {
+        position: absolute;
+        opacity: 0;
+        animation: zoomed-fade-out .7s ease-in forwards;
+    }
+
+    .get-set {
+        position: absolute;
+        opacity: 0;
+        animation: zoomed-fade-out .7s 1s ease-in forwards;
+    }
+
+    .go {
+        position: absolute;
+        opacity: 0;
+        animation: zoomed-fade-out .7s 2s ease-in forwards;
+    }
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes zoomed-fade-out {
+    from {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    to {
+        transform: scale(2);
+        opacity: 0;
+    }
+}

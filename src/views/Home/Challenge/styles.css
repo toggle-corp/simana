@@ -6,7 +6,7 @@
 
     .title {
         opacity: 0;
-        animation: appear .2s 1s ease-in-out forwards, dissapear .2s calc(var(--round-duration) - 1s) ease-in-out forwards;
+        animation: appear .2s ease-in-out forwards;
     }
 }
 
