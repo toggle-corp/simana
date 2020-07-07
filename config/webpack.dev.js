@@ -202,7 +202,7 @@ module.exports = (env) => {
                 short_name: 'Simana',
                 description: 'Quiz game to explore places in Nepal',
                 background_color: '#f0f0f0',
-                orientation: 'portrait',
+                orientation: 'landscape',
                 // theme_color: '#2E8B57',
                 display: 'standalone',
                 start_url: '/',
