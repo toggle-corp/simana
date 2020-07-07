@@ -34,8 +34,16 @@
             flex-basis: 0;
             flex-direction: column;
             flex-grow: 1;
+            outline: none;
+            border: var(--width-separator-medium) solid transparent;
+            background-color: transparent;
+            cursor: pointer;
             padding: calc(var(--spacing-large) - var(--spacing-medium));
             min-width: 160px;
+
+            &.active {
+                border-color: var(--color-accent);
+            }
 
             .header {
                 flex-shrink: 0;
@@ -63,21 +71,24 @@
                 }
             }
 
-            .actions {
-                flex-shrink: 0;
-                padding: var(--spacing-small);
-            }
         }
     }
 
+    .actions {
+        display: flex;
+        flex-shrink: 0;
+        justify-content: center;
+        padding: var(--spacing-small);
+    }
+
     @media screen and (max-width: 900px) {
-        max-height: 90vh;
         max-width: 90vw;
+        max-height: 90vh;
 
         >.header {
             .heading {
-                font-size: var(--font-size-medium);
                 padding: var(--spacing-small);
+                font-size: var(--font-size-medium);
             }
         }
 

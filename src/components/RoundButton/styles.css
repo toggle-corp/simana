@@ -9,9 +9,10 @@
     background-color: var(--color-accent);
     cursor: pointer;
     padding: var(--spacing-medium);
-    width: calc(1em + 2 * var(--spacing-medium));
-    height: calc(1em + 2 * var(--spacing-medium));
+    width: calc(1.3em + 2 * var(--spacing-medium));
+    height: calc(1.3em + 2 * var(--spacing-medium));
     color: var(--color-text-on-accent);
     font-family: inherit;
+    font-size: 1.3em;
     font-weight: var(--font-weight-bold);
 }

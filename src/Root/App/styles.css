@@ -24,14 +24,24 @@
     --font-size-super-large: 28px;
     --font-size-ultra-large: 40px;
 
-    --font-weight-light: 300;
+    --font-weight-light: 400;
     --font-weight-medium: 400;
-    --font-weight-bold: 700;
+    --font-weight-bold: 400;
 
     --radius-border-medium: 1em;
+
+    --width-separator-thin: 1px;
+    --width-separator-medium: 2px;
 }
 
 h1, h2, h3, h4, h5, h6 {
     margin: 0;
+    font-family: var(--font-family-heading);
     font-weight: var(--font-weight-bold);
+}
+
+:global {
+    .mapboxgl-canvas {
+        font-family: var(--font-family-sans-serif);
+    }
 }

@@ -17,6 +17,7 @@ import {
 } from '#utils/constants';
 import RoundButton from '#components/RoundButton';
 import GameStartMessage from '#components/GameStartMessage';
+import Fact from '#components/Fact';
 
 import UserInformationModal from './UserInformationModal';
 import GameModeSelectionModal from './GameModeSelectionModal';
@@ -182,6 +183,16 @@ function Home(props: Props): React.ReactElement {
 
     return (
         <div className={_cs(className, styles.home)}>
+            { gameState.current === 'user-info' && (
+                <UserInformationModal
+                    onStartClick={handleUserInfoStartClick}
+                />
+            )}
+            { gameState.current === 'mode-selection' && (
+                <GameModeSelectionModal
+                    onModeSelect={handleGameModeSelect}
+                />
+            )}
             <RegionMap
                 className={styles.mapContainer}
                 mode={mode}
@@ -189,6 +200,15 @@ function Home(props: Props): React.ReactElement {
                 onRegionClick={handleRegionClick}
                 clickedMapState={clickedMapState}
                 hintMapState={hintMapState}
+            />
+            { gameState.current === 'game-start' && !mapSourceLoaded && (
+                <div className={styles.mapLoadingMessage}>
+                    Loading map...
+                </div>
+            )}
+            <MessageView
+                className={styles.message}
+                message={message}
             />
             {mode && (roundRunning || gameState.current === 'initialize') && (
                 <>
@@ -207,10 +227,6 @@ function Home(props: Props): React.ReactElement {
                     />
                 </>
             )}
-            <MessageView
-                className={styles.message}
-                message={message}
-            />
             { gameState.current === 'round' && (
                 <Challenge
                     round={round}
@@ -219,24 +235,16 @@ function Home(props: Props): React.ReactElement {
                     mode={mode}
                 />
             )}
-            { gameState.current === 'initialize' && !mapSourceLoaded && (
-                <div className={styles.mapLoadingMessage}>
-                    Loading map...
-                </div>
+            { gameState.current === 'round' && (
+                <Fact
+                    className={styles.fact}
+                    regionTitle={challenges[round]?.regionTitle}
+                    facts={challenges[round]?.facts}
+                />
             )}
             { gameState.current === 'initialize' && mapSourceLoaded && (
                 <GameStartMessage
                     className={styles.gameStartMessage}
-                />
-            )}
-            { gameState.current === 'user-info' && (
-                <UserInformationModal
-                    onStartClick={handleUserInfoStartClick}
-                />
-            )}
-            { gameState.current === 'mode-selection' && (
-                <GameModeSelectionModal
-                    onModeSelect={handleGameModeSelect}
                 />
             )}
             { gameState.current === 'game-end' && mode && (

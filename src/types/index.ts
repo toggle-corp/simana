@@ -18,6 +18,8 @@ export interface Challenge {
     answer: string;
     result: 'pass' | 'fail' | undefined;
     attempts: string[];
+    facts: string[];
+    regionTitle: string;
 }
 
 export interface Region {

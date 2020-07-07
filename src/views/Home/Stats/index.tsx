@@ -39,7 +39,7 @@ function Stats(props: Props) {
         <div className={_cs(className, styles.stats)}>
             <TextOutput
                 className={styles.gameMode}
-                label="Game type:"
+                label="Game mode:"
                 value={gameModes[mode]}
             />
             {(mode === 'province' || mode === 'district') ? (

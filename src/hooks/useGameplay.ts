@@ -38,6 +38,7 @@ const getRegions = (mode: GameMode, amount: number) => {
         .map((r) => ({
             code: r.code,
             title: r.title,
+            facts: r.facts,
         }));
 
     return shuffledRegions;
@@ -60,12 +61,12 @@ export default function useGameplay(
     onGameplayEnd: (ticks: number[]) => void,
 ) {
     const isRoundRunning = gameState === 'round' || gameState === 'round-start' || gameState === 'round-end';
-    const roundDuration = gameMode ? getRoundDuration(gameMode) : ROUND_DURATION;
+    const isFixedGameMode = gameMode === 'districtFixed' || gameMode === 'provinceFixed';
 
     const {
         ticks,
         forceTick,
-    } = useTimer(isRoundRunning, roundDuration);
+    } = useTimer(isRoundRunning && isFixedGameMode, ROUND_DURATION);
 
     const [challenges, setChallenges] = React.useState<Challenge[]>([]);
     const [round, setRound] = React.useState<number>(0);
@@ -79,6 +80,8 @@ export default function useGameplay(
                 answer: region.code,
                 result: undefined,
                 attempts: [],
+                regionTitle: region.title,
+                facts: region.facts,
             }));
 
             setChallenges(newChallenges);

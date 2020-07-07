@@ -9,6 +9,15 @@
     background-blend-mode: lighten;
     overflow: auto;
 
+    .map-loading-message {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1;
+        font-size: var(--font-size-large);
+    }
+
     .map-container {
         flex-grow: 1;
         opacity: 1;
@@ -16,30 +25,6 @@
         canvas {
             outline: none;
         }
-    }
-
-    .game-start-message {
-        position: absolute;
-        top: 20%;
-        left: 0;
-        z-index: 1;
-        width: 100%;
-    }
-
-    .challenge {
-        position: absolute;
-        bottom: 15%;
-        left: 50%;
-        transform: translateX(-50%);
-        z-index: 1;
-    }
-
-    .stats {
-        position: absolute;
-        top: 0;
-        right: 0;
-        z-index: 1;
-        width: 100%;
     }
 
     .message {
@@ -51,11 +36,42 @@
         pointer-events: none;
     }
 
+    .game-start-message {
+        position: absolute;
+        top: 20%;
+        left: 0;
+        z-index: 1;
+        width: 100%;
+    }
+
+    .stats {
+        position: absolute;
+        top: 0;
+        right: 0;
+        z-index: 1;
+        width: 100%;
+    }
+    
     .score-board {
         position: absolute;
         top: 50%;
         left: 0;
         transform: translateY(-50%);
+        z-index: 1;
+    }
+
+    .challenge {
+        position: absolute;
+        bottom: 15%;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1;
+    }
+
+    .fact {
+        position: absolute;
+        top: 10%;
+        right: var(--spacing-large);
         z-index: 1;
     }
 
@@ -71,16 +87,9 @@
 
             path {
                 stroke: #fff;
+                stroke-width: var(--width-separator-medium);
             }
         }
-    }
-
-    .map-loading-message {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        z-index: 1;
     }
 
     @media screen and (max-width: 1080px) {
