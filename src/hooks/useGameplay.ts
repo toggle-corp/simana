@@ -68,7 +68,6 @@ export default function useGameplay(
 
     const [challenges, setChallenges] = React.useState<Challenge[]>([]);
     const [round, setRound] = React.useState<number>(-1);
-    const roundRef = React.useRef(-1);
 
     React.useEffect(() => {
         if (gameMode && gameState === 'initialize') {
@@ -85,13 +84,11 @@ export default function useGameplay(
 
             setChallenges(newChallenges);
             setRound(-1);
-            roundRef.current = -1;
         }
 
         if (gameState === 'round-start') {
             setRound((prevRound) => {
                 const newRound = prevRound + 1;
-                roundRef.current = newRound;
                 return newRound;
             });
         }
@@ -130,24 +127,23 @@ export default function useGameplay(
         let shouldUpdateRound = false;
 
         if (fixedGameModeMap[gameMode]) {
-            if (ticks.length > roundRef.current) {
+            if (ticks.length > round) {
                 shouldUpdateRound = true;
             }
         }
 
-        const currentChallenge = challenges[roundRef.current];
+        const currentChallenge = challenges[round];
         if (currentChallenge?.result) {
             shouldUpdateRound = true;
             forceTick(false);
         }
 
         if (shouldUpdateRound) {
-            const newRound = roundRef.current + 1;
+            const newRound = round + 1;
             const maxRounds = getMaxRounds(gameMode);
 
             if (newRound >= maxRounds) {
                 setRound(-1);
-                roundRef.current = -1;
                 onGameplayEnd(ticks);
             } else {
                 onRoundEnd();
@@ -162,6 +158,7 @@ export default function useGameplay(
         onRoundEnd,
         forceTick,
         onGameplayEnd,
+        round,
     ]);
 
     return React.useMemo(() => ({
