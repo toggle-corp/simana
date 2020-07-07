@@ -68,7 +68,6 @@ function Home(props: Props): React.ReactElement {
     const handleGameplayEnd = React.useCallback((ticks: number[]) => {
         const totalDuration = ticks.reduce((acc, val) => acc + val, 0);
         gameState.endGame();
-        console.info('game finished...', gameState.current, totalDuration);
     }, [gameState]);
 
     const showCorrectAnswer = React.useCallback((gameMode: GameMode, regionCode: string) => {

@@ -9,8 +9,6 @@ import {
 import {
     shuffle,
     getMaxRounds,
-    getMaxDuration,
-    getRoundDuration,
 } from '#utils/common';
 
 import {
@@ -57,7 +55,7 @@ export default function useGameplay(
     gameState: GameState,
     gameMode: GameMode | undefined,
     onRoundStart: (timestamp: number) => void,
-    onRoundEnd: (round: number) => void,
+    onRoundEnd: () => void,
     onGameplayEnd: (ticks: number[]) => void,
 ) {
     const isRoundRunning = gameState === 'round' || gameState === 'round-start' || gameState === 'round-end';
@@ -69,7 +67,8 @@ export default function useGameplay(
     } = useTimer(isRoundRunning && isFixedGameMode, ROUND_DURATION);
 
     const [challenges, setChallenges] = React.useState<Challenge[]>([]);
-    const [round, setRound] = React.useState<number>(0);
+    const [round, setRound] = React.useState<number>(-1);
+    const roundRef = React.useRef(-1);
 
     React.useEffect(() => {
         if (gameMode && gameState === 'initialize') {
@@ -85,8 +84,18 @@ export default function useGameplay(
             }));
 
             setChallenges(newChallenges);
+            setRound(-1);
+            roundRef.current = -1;
         }
-    }, [gameState, setChallenges, gameMode]);
+
+        if (gameState === 'round-start') {
+            setRound((prevRound) => {
+                const newRound = prevRound + 1;
+                roundRef.current = newRound;
+                return newRound;
+            });
+        }
+    }, [gameState, setChallenges, gameMode, setRound]);
 
     React.useEffect(() => {
         if (gameState === 'round') {
@@ -114,46 +123,45 @@ export default function useGameplay(
     }, [challenges, round, setChallenges]);
 
     React.useEffect(() => {
-        if (!gameMode || !isRoundRunning) {
+        if (!gameMode || (gameState !== 'round')) {
             return;
         }
 
         let shouldUpdateRound = false;
 
         if (fixedGameModeMap[gameMode]) {
-            if (ticks.length > round) {
+            if (ticks.length > roundRef.current) {
                 shouldUpdateRound = true;
             }
         }
 
-        const currentChallenge = challenges[round];
+        const currentChallenge = challenges[roundRef.current];
         if (currentChallenge?.result) {
             shouldUpdateRound = true;
             forceTick(false);
         }
 
         if (shouldUpdateRound) {
-            const newRound = round + 1;
+            const newRound = roundRef.current + 1;
             const maxRounds = getMaxRounds(gameMode);
 
             if (newRound >= maxRounds) {
-                setRound(0);
+                setRound(-1);
+                roundRef.current = -1;
                 onGameplayEnd(ticks);
             } else {
-                setRound(newRound);
-                onRoundEnd(newRound);
+                onRoundEnd();
             }
         }
     }, [
+        gameState,
         challenges,
         ticks,
-        round,
         gameMode,
         setRound,
         onRoundEnd,
         forceTick,
         onGameplayEnd,
-        isRoundRunning,
     ]);
 
     return React.useMemo(() => ({
