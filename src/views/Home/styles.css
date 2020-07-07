@@ -9,6 +9,15 @@
     background-blend-mode: lighten;
     overflow: auto;
 
+    .map-loading-message {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1;
+        font-size: var(--font-size-large);
+    }
+
     .map-container {
         flex-grow: 1;
         opacity: 1;
@@ -16,53 +25,6 @@
         canvas {
             outline: none;
         }
-    }
-
-    .initialize-message {
-        display: flex;
-        position: absolute;
-        top: 20%;
-        left: 0;
-        align-items: center;
-        justify-content: center;
-        z-index: 1;
-        width: 100%;
-        font-size: var(--font-size-large);
-        font-weight: var(--font-weight-bold);
-
-        .ready {
-            position: absolute;
-            opacity: 0;
-            animation: zoomed-fade-out .7s ease-in forwards;
-        }
-
-        .get-set {
-            position: absolute;
-            opacity: 0;
-            animation: zoomed-fade-out .7s 1s ease-in forwards;
-        }
-
-        .go {
-            position: absolute;
-            opacity: 0;
-            animation: zoomed-fade-out .7s 2s ease-in forwards;
-        }
-    }
-
-    .challenge {
-        position: absolute;
-        bottom: 15%;
-        left: 50%;
-        transform: translateX(-50%);
-        z-index: 1;
-    }
-
-    .stats {
-        position: absolute;
-        top: 0;
-        right: 0;
-        z-index: 1;
-        width: 100%;
     }
 
     .message {
@@ -74,11 +36,42 @@
         pointer-events: none;
     }
 
+    .game-start-message {
+        position: absolute;
+        top: 20%;
+        left: 0;
+        z-index: 1;
+        width: 100%;
+    }
+
+    .stats {
+        position: absolute;
+        top: 0;
+        right: 0;
+        z-index: 1;
+        width: 100%;
+    }
+    
     .score-board {
         position: absolute;
         top: 50%;
         left: 0;
         transform: translateY(-50%);
+        z-index: 1;
+    }
+
+    .challenge {
+        position: absolute;
+        bottom: 15%;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1;
+    }
+
+    .fact {
+        position: absolute;
+        top: 10%;
+        right: var(--spacing-large);
         z-index: 1;
     }
 
@@ -94,22 +87,15 @@
 
             path {
                 stroke: #fff;
+                stroke-width: var(--width-separator-medium);
             }
         }
     }
 
-    .map-loading-message {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        z-index: 1;
-    }
-
     @media screen and (max-width: 1080px) {
         .initialize-message {
-            font-size: var(--font-size-large);
             top: 15%;
+            font-size: var(--font-size-large);
         }
 
         .message {
@@ -124,8 +110,8 @@
 
     @media screen and (max-width: 900px) {
         .initialize-message {
-            font-size: var(--font-size-medium);
             top: 15%;
+            font-size: var(--font-size-medium);
         }
 
         .message {
@@ -146,17 +132,5 @@
 
     to {
         opacity: 1;
-    }
-}
-
-@keyframes zoomed-fade-out {
-    from {
-        transform: scale(1);
-        opacity: 1;
-    }
-
-    to {
-        transform: scale(2);
-        opacity: 0;
     }
 }

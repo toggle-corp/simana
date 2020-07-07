@@ -47,7 +47,7 @@ function ChallengeView(p: Props) {
                 className={styles.title}
                 key={round}
             >
-                {`${round + 1}. ${challenge.title}`}
+                {`${round + 1}. ${challenge?.title}`}
             </div>
         </div>
     );

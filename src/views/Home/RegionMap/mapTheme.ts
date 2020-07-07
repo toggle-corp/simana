@@ -1,36 +1,41 @@
 const provinceTextPaint: mapboxgl.SymbolPaint = {
-    'text-color': '#002121',
-    'text-halo-color': 'rgba(255, 255, 255, 0.7)',
-    'text-halo-width': 2,
+    'text-color': '#000000',
+    'text-halo-color': '#fffff0',
+    'text-halo-width': 1,
 };
 const districtTextPaint: mapboxgl.SymbolPaint = {
-    'text-color': '#002121',
-    'text-halo-color': 'rgba(255, 255, 255, 0.7)',
-    'text-halo-width': 2,
+    'text-color': '#000000',
+    'text-halo-color': '#fffff0',
+    'text-halo-width': 1,
 };
 const provinceTextLayout: mapboxgl.SymbolLayout = {
     'text-field': ['get', 'title'],
-    'text-size': 20,
+    'text-size': 18,
     'text-justify': 'center',
     'text-anchor': 'center',
 };
 const districtTextLayout: mapboxgl.SymbolLayout = {
     'text-field': ['get', 'title'],
-    'text-size': 20,
+    'text-size': 13,
     'text-justify': 'center',
     'text-anchor': 'center',
 };
+
+const colorGood = '#b9d993';
+const colorBad = '#ff988d';
+const colorNeutral = '#4282c6';
+const colorDefault = '#759bab';
 
 const provinceFillPaint: mapboxgl.FillPaint = {
     'fill-color': [
         'case',
         ['==', ['feature-state', 'clicked'], 'good'],
-        '#b9d993',
+        colorGood,
         ['==', ['feature-state', 'clicked'], 'bad'],
-        '#da483d',
+        colorBad,
         ['==', ['feature-state', 'hint'], 'neutral'],
-        '#223256',
-        '#759bab',
+        colorNeutral,
+        colorDefault,
     ],
     'fill-opacity': [
         'case',
@@ -44,12 +49,12 @@ const districtFillPaint : mapboxgl.FillPaint = {
     'fill-color': [
         'case',
         ['==', ['feature-state', 'clicked'], 'good'],
-        '#b9d993',
+        colorGood,
         ['==', ['feature-state', 'clicked'], 'bad'],
-        '#da483d',
+        colorBad,
         ['==', ['feature-state', 'hint'], 'neutral'],
-        '#223256',
-        '#759bab',
+        colorNeutral,
+        colorDefault,
     ],
     'fill-opacity': [
         'case',

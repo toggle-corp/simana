@@ -24,14 +24,27 @@ const modeToMaxRoundMap: {
     districtFixed: DISTRICTS_MAX_ROUNDS,
 };
 
+const modeToRoundDurationMap: {
+    [key in GameMode]: number;
+} = {
+    province: TOTAL_PROVINCES * ROUND_DURATION,
+    district: TOTAL_DISTRICTS * ROUND_DURATION,
+    provinceFixed: ROUND_DURATION,
+    districtFixed: ROUND_DURATION,
+};
+
 const modeToMaxTotalDurationMap: {
     [key in GameMode]: number;
 } = {
-    province: 1 * ONE_MINUTE,
+    province: 2 * ONE_MINUTE,
     district: 15 * ONE_MINUTE,
     provinceFixed: ROUND_DURATION * PROVINCE_MAX_ROUNDS,
     districtFixed: ROUND_DURATION * DISTRICTS_MAX_ROUNDS,
 };
+
+export function getRoundDuration(mode: GameMode) {
+    return modeToRoundDurationMap[mode];
+}
 
 export function getMaxDuration(mode: GameMode) {
     return modeToMaxTotalDurationMap[mode];

@@ -1,7 +1,7 @@
 .message {
     .current {
         opacity: 0;
-        animation: appear .2s ease-in-out forwards, zoomed-fade-out .2s 1.8s ease-in-out forwards;
+        animation: appear .2s ease-in-out forwards, zoomed-fade-out .2s 2.6s ease-in-out forwards;
         color: var(--color-accent);
         font-size: var(--font-size-super-large);
         font-weight: bold;
