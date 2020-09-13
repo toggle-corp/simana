@@ -1,14 +1,15 @@
 import React from 'react';
 import { _cs } from '@togglecorp/fujs';
-import { FaUserSecret } from 'react-icons/fa';
 
 import {
     ROUND_DURATION,
     gameModes,
+    avatars,
 } from '#utils/constants';
 import {
     GameMode,
     GameState,
+    AvatarKey,
 } from '#types';
 
 import ElapsedOutput from '#components/ElapsedOutput';
@@ -22,6 +23,7 @@ interface Props {
     mode: GameMode;
     state: GameState;
     username: string;
+    avatar: AvatarKey;
     className?: string;
 }
 
@@ -31,6 +33,7 @@ function Stats(props: Props) {
         mode,
         state,
         username,
+        avatar,
         className,
     } = props;
 
@@ -69,7 +72,15 @@ function Stats(props: Props) {
             )}
             <TextOutput
                 className={styles.username}
-                label={<FaUserSecret />}
+                label={(
+                    <>
+                        {/* eslint-disable-next-line jsx-a11y/alt-text */}
+                        <img
+                            className={styles.avatar}
+                            src={avatars[avatar]}
+                        />
+                    </>
+                )}
                 value={username}
             />
         </div>

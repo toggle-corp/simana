@@ -6,8 +6,8 @@
     background-color: var(--color-foreground);
     padding: var(--spacing-large);
     width: 500px;
-    height: 400px;
     max-width: 60vw;
+    height: 400px;
     max-height: 80vh;
 
     .header {
@@ -26,20 +26,45 @@
         flex-grow: 1;
         justify-content: center;
 
-        .avatar {
-            padding: var(--spacing-medium);
+        .avatar-list {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--spacing-large) var(--spacing-medium);
 
-            .icon {
-                font-size: 56px;
+            .avatar-button {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                opacity: 0.5;
+                margin: 0 var(--spacing-small);
+                outline: none;
+                border: none;
+                border-bottom: var(--width-separator-medium) solid transparent;
+                background-color: transparent;
+                cursor: pointer;
+                padding: 0;
+                filter: saturate(50%);
+
+                &.active {
+                    opacity: 1;
+                    border-bottom-color: var(--color-accent);
+                    filter: none;
+                }
+
+                .avatar {
+                    width: 54px;
+                    height: 54px;
+                }
             }
         }
 
         .inputs {
-            padding: var(--spacing-medium);
+            padding: var(--spacing-large) var(--spacing-medium);
         }
 
         .actions {
-            padding: var(--spacing-medium);
+            padding: var(--spacing-large) var(--spacing-medium);
         }
     }
 

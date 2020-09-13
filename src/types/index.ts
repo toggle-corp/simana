@@ -38,3 +38,5 @@ export interface MapState {
     id: number;
     value: string;
 }
+
+export type AvatarKey = 'avatar1' | 'avatar2' | 'avatar3' | 'avatar4';

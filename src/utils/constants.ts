@@ -1,4 +1,12 @@
 import { listToMap } from '@togglecorp/fujs';
+
+import { AvatarKey } from '#types';
+
+import avatar1 from '../assets/Avatar-02.svg';
+import avatar2 from '../assets/Avatar-03.svg';
+import avatar3 from '../assets/Avatar-04.svg';
+import avatar4 from '../assets/Avatar-05.svg';
+
 import rawDistricts from './districts.json';
 import rawProvinces from './provinces.json';
 
@@ -58,3 +66,12 @@ export const districts = rawDistricts.map((d) => ({
 }));
 
 export const districtIdByCode = listToMap(districts, (d) => d.code, (d) => d.id);
+
+export const avatars: {
+    [key in AvatarKey]: string;
+} = {
+    avatar1,
+    avatar2,
+    avatar3,
+    avatar4,
+};

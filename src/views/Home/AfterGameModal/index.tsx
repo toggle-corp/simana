@@ -7,9 +7,13 @@ import Button from '#components/Button';
 import {
     Challenge,
     GameMode,
+    AvatarKey,
 } from '#types';
 import { calculateScore } from '#utils/common';
-import { gameModes } from '#utils/constants';
+import {
+    gameModes,
+    avatars,
+} from '#utils/constants';
 
 import TextOutput from '#components/TextOutput';
 import ElapsedOutput from '#components/ElapsedOutput';
@@ -24,6 +28,7 @@ interface Props {
     mode: GameMode,
     username: string;
     ticks: number[];
+    avatar: AvatarKey;
 }
 
 function AfterGameModal(props: Props): React.ReactElement {
@@ -34,6 +39,7 @@ function AfterGameModal(props: Props): React.ReactElement {
         onNicknameClick,
         mode,
         username,
+        avatar,
         ticks,
     } = props;
 
@@ -56,6 +62,11 @@ function AfterGameModal(props: Props): React.ReactElement {
                 <div className={styles.content}>
                     <div className={styles.score}>
                         <div className={styles.label}>
+                            {/* eslint-disable-next-line jsx-a11y/alt-text */}
+                            <img
+                                className={styles.avatar}
+                                src={avatars[avatar]}
+                            />
                             {`${username} scored:`}
                         </div>
                         <div className={styles.value}>

@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { _cs } from '@togglecorp/fujs';
 import { IoMdClose } from 'react-icons/io';
 import { GrPowerReset } from 'react-icons/gr';
@@ -7,6 +7,7 @@ import {
     GameMode,
     Message,
     MapState,
+    AvatarKey,
 } from '#types';
 import useGameplay from '#hooks/useGameplay';
 import useGameState from '#hooks/useGameState';
@@ -58,7 +59,8 @@ function Home(props: Props): React.ReactElement {
 
     const gameState = useGameState(mapSourceLoaded);
 
-    const [name, setName] = React.useState('Anonymous');
+    const [name, setName] = React.useState('');
+    const [avatar, setAvatar] = React.useState<AvatarKey>('avatar1');
     const [mode, setMode] = React.useState<GameMode | undefined>();
 
     const answerRef = React.useRef<string | undefined>();
@@ -104,8 +106,9 @@ function Home(props: Props): React.ReactElement {
         answerRef.current = challange?.answer;
     }, [challenges, round, answerRef]);
 
-    const handleUserInfoStartClick = React.useCallback((userName) => {
+    const handleUserInfoStartClick = React.useCallback((userName, userAvatar) => {
         setName(userName);
+        setAvatar(userAvatar);
         gameState.next();
     }, [gameState]);
 
@@ -212,6 +215,7 @@ function Home(props: Props): React.ReactElement {
             {mode && (roundRunning || gameState.current === 'initialize') && (
                 <>
                     <Stats
+                        avatar={avatar}
                         className={styles.stats}
                         mode={mode}
                         username={name}
@@ -248,6 +252,7 @@ function Home(props: Props): React.ReactElement {
             )}
             { gameState.current === 'game-end' && mode && (
                 <AfterGameModal
+                    avatar={avatar}
                     mode={mode}
                     challenges={challenges}
                     onPlayAgainClick={handlePlayAgainButtonClick}
