@@ -18,7 +18,32 @@ import {
 import TextOutput from '#components/TextOutput';
 import ElapsedOutput from '#components/ElapsedOutput';
 
+import tcLogo from '#assets/togglecorp-logo.png';
+import paradygmTvLogo from '#assets/paradygm-tv-logo.jpg';
+import innovateTechLogo from '#assets/innovate-tech-logo.png';
+
 import styles from './styles.css';
+
+const partners = [
+    {
+        key: 'ptv',
+        name: 'Paradygm TV',
+        url: 'https://www.youtube.com/channel/UCpzxtwBLa0BoJ2aKua5CIXg',
+        logo: paradygmTvLogo,
+    },
+    {
+        key: 'it',
+        name: 'Innovate Tech',
+        url: 'https://www.innovatetech.io/',
+        logo: innovateTechLogo,
+    },
+    {
+        key: 'tc',
+        name: 'Togglecorp Solutions Pvt. Ltd.',
+        url: 'https://togglecorp.com',
+        logo: tcLogo,
+    },
+];
 
 interface Props {
     onPlayAgainClick: () => void;
@@ -99,6 +124,22 @@ function AfterGameModal(props: Props): React.ReactElement {
                         Play again
                     </Button>
                 </div>
+            </div>
+            <div className={styles.partnerList}>
+                { partners.map((p) => (
+                    <a
+                        key={p.key}
+                        className={styles.partner}
+                        href={p.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        <img
+                            src={p.logo}
+                            alt={p.name}
+                        />
+                    </a>
+                ))}
             </div>
         </Haze>
     );

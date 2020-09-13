@@ -2,10 +2,10 @@ import { listToMap } from '@togglecorp/fujs';
 
 import { AvatarKey } from '#types';
 
-import avatar1 from '../assets/Avatar-02.svg';
-import avatar2 from '../assets/Avatar-03.svg';
-import avatar3 from '../assets/Avatar-04.svg';
-import avatar4 from '../assets/Avatar-05.svg';
+import avatar1 from '#assets/Avatar-02.svg';
+import avatar2 from '#assets/Avatar-03.svg';
+import avatar3 from '#assets/Avatar-04.svg';
+import avatar4 from '#assets/Avatar-05.svg';
 
 import rawDistricts from './districts.json';
 import rawProvinces from './provinces.json';
