@@ -36,7 +36,6 @@ module.exports = {
                     '#types': './src/types',
                     '#hooks': './src/hooks',
                     '#assets': './src/assets',
-                    '#re-map': './src/vendor/re-map',
                 },
             },
         },

@@ -1,13 +1,14 @@
 import React, { useMemo } from 'react';
 import { unique } from '@togglecorp/fujs';
 
-import Map from '#re-map';
-import MapContainer from '#re-map/MapContainer';
-import MapBounds from '#re-map/MapBounds';
-import MapSource from '#re-map/MapSource';
-import State from '#re-map/MapSource/MapState';
-import MapLayer from '#re-map/MapSource/MapLayer';
-import { MapChildContext } from '#re-map/context';
+import Map, {
+    MapContainer,
+    MapBounds,
+    MapSource,
+    MapState as State,
+    MapLayer,
+    MapChildContext,
+} from '@togglecorp/re-map';
 
 import {
     GameMode,

@@ -1,10 +1,9 @@
 import React from 'react';
-import { _cs } from '@togglecorp/fujs';
 
 import InputContainer from '#components/InputContainer';
 import Input, { InputProps } from '#components/Input';
 
-import styles from './styles.css';
+// import styles from './styles.css';
 
 interface Props extends InputProps {
     className?: string;

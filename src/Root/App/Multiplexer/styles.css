@@ -37,19 +37,19 @@
 
     .warning {
         display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
         position: absolute;
-        text-align: center;
-        height: 100vh;
-        width: 100vw;
+        align-items: center;
+        flex-direction: column;
+        justify-content: center;
         z-index: 111;
-        padding: var(--spacing-large);
         background-color: var(--color-background);
         background-image: url('../../../assets/background.png');
         background-position: center center;
         background-size: cover;
+        padding: var(--spacing-large);
+        width: 100vw;
+        height: 100vh;
+        text-align: center;
         background-blend-mode: lighten;
     }
 }
