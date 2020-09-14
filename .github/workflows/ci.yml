@@ -16,13 +16,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      # Using re-map
-      - uses: actions/checkout@v2
-        with:
-          repository: toggle-corp/re-map
-          ref: develop
-          path: src/vendor/re-map
-
       - uses: actions/setup-node@v1
         with:
           node-version: '12.x'
@@ -53,7 +46,7 @@ jobs:
       - name: Save build files as artifact
         uses: actions/upload-artifact@v1
         with:
-          name: nepal-geoexplorer
+          name: simana
           path: build
 
 
@@ -70,7 +63,7 @@ jobs:
     steps:
       - uses: actions/download-artifact@v1
         with:
-          name: nepal-geoexplorer
+          name: simana
           path: build
 
       # Copy build to S3
