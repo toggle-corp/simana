@@ -3,7 +3,6 @@ import { Switch, Route } from 'react-router-dom';
 import { _cs } from '@togglecorp/fujs';
 
 import Navbar from '#components/Navbar';
-import Haze from '#components/Haze';
 import routes from './routes';
 
 import styles from './styles.css';
@@ -61,6 +60,7 @@ const Multiplexer = (props: Props) => {
                                     path={path}
                                     render={() => (
                                         <>
+                                            <Title value={title} />
                                             { !hideNavbar && (
                                                 <Navbar className={styles.navbar} />
                                             )}

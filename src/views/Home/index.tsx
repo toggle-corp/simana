@@ -2,6 +2,9 @@ import React from 'react';
 import { _cs } from '@togglecorp/fujs';
 import { IoMdClose } from 'react-icons/io';
 import { GrPowerReset } from 'react-icons/gr';
+import { tx } from '@transifex/native';
+import { T, useT, LanguagePicker } from '@transifex/react';
+
 
 import {
     GameMode,
@@ -31,10 +34,11 @@ import MessageView from './Message';
 
 import styles from './styles.css';
 
+tx.init({ token: process.env.REACT_APP_TRANSIFEX_TOKEN, filterTags: 'gameplay' });
+
 interface Props {
     className?: string;
 }
-
 
 const HINT_HIGHLIGHT_TIMEOUT = 2800;
 const CLICK_HIGHLIGHT_TIMEOUT = 3000;
@@ -50,6 +54,10 @@ const gameModeToCodeMap: {
 
 function Home(props: Props): React.ReactElement {
     const { className } = props;
+    const t = useT();
+    const restartTooltip = t('Restart round');
+    const endgameTooltip = t('End game');
+
     const [clickedMapState, setClickedMapState] = React.useState<MapState | undefined>();
     const [hintMapState, setHintMapState] = React.useState<MapState | undefined>();
 
@@ -69,6 +77,7 @@ function Home(props: Props): React.ReactElement {
 
     const handleGameplayEnd = React.useCallback((ticks: number[]) => {
         const totalDuration = ticks.reduce((acc, val) => acc + val, 0);
+        console.info('Total duration', totalDuration);
         gameState.endGame();
     }, [gameState]);
 
@@ -155,7 +164,7 @@ function Home(props: Props): React.ReactElement {
                 });
             } else {
                 setMessage({
-                    text: `Oops! you clicked on ${properties.title}`,
+                    text: t('Oops! you clicked on {geoarea}', { geoarea: properties.title, _tags: 'gameplay' }),
                     timestamp: new Date().getTime(),
                     type: 'bad',
                 });
@@ -170,7 +179,16 @@ function Home(props: Props): React.ReactElement {
                 setClickedMapState(undefined);
             }, CLICK_HIGHLIGHT_TIMEOUT);
         }
-    }, [gameState, mode, addAttempt, setMessage, answerRef, setClickedMapState, showCorrectAnswer]);
+    }, [
+        gameState,
+        mode,
+        addAttempt,
+        setMessage,
+        answerRef,
+        setClickedMapState,
+        showCorrectAnswer,
+        t,
+    ]);
 
     const handleMapSourceLoad = React.useCallback(() => {
         setMapSourceLoaded(true);
@@ -185,6 +203,7 @@ function Home(props: Props): React.ReactElement {
 
     return (
         <div className={_cs(className, styles.home)}>
+            <LanguagePicker className={styles.languagePicker} />
             { gameState.current === 'user-info' && (
                 <UserInformationModal
                     onStartClick={handleUserInfoStartClick}
@@ -205,7 +224,7 @@ function Home(props: Props): React.ReactElement {
             />
             { gameState.current === 'game-start' && !mapSourceLoaded && (
                 <div className={styles.mapLoadingMessage}>
-                    Loading map...
+                    <T _str="Loading map..." />
                 </div>
             )}
             <MessageView
@@ -265,14 +284,14 @@ function Home(props: Props): React.ReactElement {
             { roundRunning && (
                 <div className={styles.activeGameActions}>
                     <RoundButton
-                        tooltip="Restart round"
+                        tooltip={restartTooltip}
                         onClick={handleRestartRoundButtonClick}
                     >
                         <GrPowerReset />
                     </RoundButton>
                     <RoundButton
                         onClick={handleSurrenderButtonClick}
-                        tooltip="End game"
+                        tooltip={endgameTooltip}
                     >
                         <IoMdClose />
                     </RoundButton>

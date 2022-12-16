@@ -9,6 +9,10 @@
     background-blend-mode: lighten;
     overflow: auto;
 
+    .language-picker {
+        z-index: 111;
+    }
+
     .map-loading-message {
         position: absolute;
         top: 50%;
