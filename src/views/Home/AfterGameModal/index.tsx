@@ -1,5 +1,6 @@
 import React from 'react';
 import { addSeparator } from '@togglecorp/fujs';
+import { T, useT } from '@transifex/react';
 
 import Haze from '#components/Haze';
 import Button from '#components/Button';
@@ -76,12 +77,14 @@ function AfterGameModal(props: Props): React.ReactElement {
         ticks.reduce((acc, val) => acc + val, 0)
     ), [ticks]);
 
+    const t = useT();
+
     return (
         <Haze>
             <div className={styles.afterGamePlayModal}>
                 <header className={styles.header}>
                     <h2 className={styles.heading}>
-                        Game over
+                        <T _str="Game over" _tags="gameplay" />
                     </h2>
                 </header>
                 <div className={styles.content}>
@@ -100,12 +103,12 @@ function AfterGameModal(props: Props): React.ReactElement {
                     </div>
                     <TextOutput
                         className={styles.mode}
-                        label="Mode:"
+                        label={t('Mode:', { _tags: 'gameplay' })}
                         value={gameModes[mode]}
                     />
                     <TextOutput
                         className={styles.time}
-                        label="Time:"
+                        label={t('Time:', { _tags: 'gameplay' })}
                         value={(
                             <ElapsedOutput
                                 totalDuration={elapsed}
@@ -115,13 +118,13 @@ function AfterGameModal(props: Props): React.ReactElement {
                 </div>
                 <div className={styles.actions}>
                     <Button onClick={onNicknameClick}>
-                        Nickname
+                        <T _str="Nickname" _tags="gameplay" />
                     </Button>
                     <Button onClick={onGameModeClick}>
-                        Game mode
+                        <T _str="Game mode" _tags="gameplay" />
                     </Button>
                     <Button onClick={onPlayAgainClick}>
-                        Play again
+                        <T _str="Play again" _tags="gameplay" />
                     </Button>
                 </div>
             </div>

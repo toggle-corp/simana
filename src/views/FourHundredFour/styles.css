@@ -3,11 +3,11 @@
     align-items: center;
     flex-direction: column;
     justify-content: center;
-    height: var(--height-content);
+    height: 100vh;
 
     .heading {
         color: var(--color-danger);
-        font-size: var(--font-size-super-large-alt);
+        font-size: var(--font-size-super-large);
         font-weight: var(--font-weight-bold);
     }
 
